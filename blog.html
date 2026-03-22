@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Gastronômico – LC Consultoria</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='8' fill='%232C1F14'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-family='Georgia,serif' fill='%23B8965A'>LC</text><line x1='10' y1='52' x2='54' y2='52' stroke='%23C4633A' stroke-width='3'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --cream:#F7F3EE; --warm-white:#FDFAF7; --charcoal:#1C1C1A; --deep-brown:#2C1F14; --terracotta:#C4633A; --gold:#B8965A; --sage:#7A8C6E; --light-sage:#EAF0E6; --border:rgba(28,28,26,0.12); --font-display:'Cormorant Garamond',Georgia,serif; --font-body:'DM Sans',sans-serif; }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html{scroll-behavior:smooth;}
+        body{background:var(--cream);color:var(--charcoal);font-family:var(--font-body);font-weight:300;overflow-x:hidden;}
+        ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--cream);} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
+
+        .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 4rem;background:rgba(247,243,238,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:all .4s;}
+        .navbar.scrolled{padding:.9rem 4rem;box-shadow:0 4px 30px rgba(28,28,26,.06);}
+        .logo{font-family:var(--font-display);font-size:1.55rem;font-weight:600;color:var(--deep-brown);text-decoration:none;}
+        .logo span{color:var(--terracotta);font-style:italic;}
+        nav{display:flex;gap:2rem;align-items:center;}
+        nav a{font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--charcoal);text-decoration:none;position:relative;transition:color .3s;}
+        nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--terracotta);transition:width .35s;}
+        nav a:hover,nav a.active{color:var(--terracotta);}
+        nav a:hover::after,nav a.active::after{width:100%;}
+        .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+        .hamburger span{display:block;width:24px;height:2px;background:var(--charcoal);}
+        .mobile-menu{display:none;position:fixed;inset:0;background:var(--deep-brown);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;}
+        .mobile-menu.active{display:flex;}
+        .mobile-menu a{font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--cream);text-decoration:none;}
+        .mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--cream);font-size:2rem;cursor:pointer;}
+
+        /* HERO BLOG */
+        .blog-hero{padding:10rem 4rem 5rem;background:var(--deep-brown);position:relative;overflow:hidden;}
+        .blog-hero::before{content:'BLOG';position:absolute;right:-2rem;top:50%;transform:translateY(-50%) rotate(90deg);font-family:var(--font-display);font-size:10rem;color:rgba(255,255,255,.03);letter-spacing:.2em;pointer-events:none;}
+        .blog-hero-tag{font-size:.68rem;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:1rem;display:block;}
+        .blog-hero h1{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:var(--cream);line-height:1.15;margin-bottom:1rem;}
+        .blog-hero h1 em{font-style:italic;color:var(--gold);}
+        .blog-hero p{font-size:1rem;line-height:1.8;color:rgba(247,243,238,.6);max-width:560px;}
+
+        /* FILTROS */
+        .blog-filters{padding:2.5rem 4rem;background:var(--warm-white);border-bottom:1px solid var(--border);display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+        .filter-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(28,28,26,.45);margin-right:.5rem;}
+        .filter-btn{padding:.4rem 1.2rem;border:1px solid var(--border);background:transparent;font-family:var(--font-body);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;transition:all .3s;color:var(--charcoal);}
+        .filter-btn:hover,.filter-btn.active{background:var(--terracotta);border-color:var(--terracotta);color:white;}
+
+        /* GRID */
+        .blog-grid-wrap{padding:5rem 4rem;}
+        .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem;}
+        .article-card{background:var(--warm-white);overflow:hidden;transition:transform .4s;display:flex;flex-direction:column;}
+        .article-card:hover{transform:translateY(-6px);}
+        .article-img{width:100%;height:220px;object-fit:cover;display:block;transition:transform .5s;}
+        .article-card:hover .article-img{transform:scale(1.04);}
+        .article-img-wrap{overflow:hidden;position:relative;}
+        .article-cat{position:absolute;top:1rem;left:1rem;background:var(--terracotta);color:white;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;padding:.3rem .8rem;}
+        .article-body{padding:2rem;flex:1;display:flex;flex-direction:column;}
+        .article-meta{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(28,28,26,.4);margin-bottom:.8rem;display:flex;gap:1rem;}
+        .article-title{font-family:var(--font-display);font-size:1.4rem;font-weight:400;color:var(--deep-brown);line-height:1.3;margin-bottom:.8rem;}
+        .article-excerpt{font-size:.88rem;line-height:1.8;color:rgba(28,28,26,.6);flex:1;margin-bottom:1.5rem;}
+        .article-read{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--terracotta);text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;transition:gap .3s;cursor:pointer;background:none;border:none;font-family:var(--font-body);}
+        .article-read:hover{gap:.8rem;}
+
+        /* MODAL ARTIGO */
+        .art-modal-overlay{display:none;position:fixed;inset:0;background:rgba(28,28,26,.8);z-index:2000;align-items:flex-start;justify-content:center;padding:2rem;backdrop-filter:blur(4px);overflow-y:auto;}
+        .art-modal-overlay.active{display:flex;}
+        .art-modal{background:var(--warm-white);max-width:800px;width:100%;margin:auto;animation:modalIn .35s ease;}
+        @keyframes modalIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+        .art-modal-cover{width:100%;height:320px;object-fit:cover;display:block;}
+        .art-modal-header{padding:3rem 3rem 1.5rem;}
+        .art-modal-cat{display:inline-block;background:var(--terracotta);color:white;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;padding:.3rem .8rem;margin-bottom:1.2rem;}
+        .art-modal-title{font-family:var(--font-display);font-size:2.2rem;font-weight:300;color:var(--deep-brown);line-height:1.2;margin-bottom:.8rem;}
+        .art-modal-meta{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(28,28,26,.4);}
+        .art-modal-body{padding:0 3rem 3rem;font-size:.95rem;line-height:2;color:rgba(28,28,26,.72);}
+        .art-modal-body h3{font-family:var(--font-display);font-size:1.4rem;color:var(--deep-brown);margin:2rem 0 .8rem;font-weight:400;}
+        .art-modal-body p{margin-bottom:1.2rem;}
+        .art-modal-body ul{margin:.5rem 0 1.5rem 1.5rem;}
+        .art-modal-body ul li{margin-bottom:.5rem;}
+        .art-modal-body blockquote{border-left:3px solid var(--terracotta);padding-left:1.5rem;margin:2rem 0;font-family:var(--font-display);font-size:1.15rem;font-style:italic;color:var(--deep-brown);}
+        .art-modal-close{display:flex;align-items:center;gap:.5rem;margin:0 3rem 2rem;background:none;border:1px solid var(--border);padding:.6rem 1.2rem;font-family:var(--font-body);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;color:var(--charcoal);transition:all .3s;}
+        .art-modal-close:hover{background:var(--deep-brown);color:white;border-color:var(--deep-brown);}
+
+        /* CTA */
+        .blog-cta{background:var(--deep-brown);padding:5rem 4rem;text-align:center;}
+        .blog-cta h2{font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--cream);margin-bottom:1rem;}
+        .blog-cta h2 em{font-style:italic;color:var(--gold);}
+        .blog-cta p{color:rgba(247,243,238,.6);margin-bottom:2rem;font-size:.95rem;}
+        .btn-primary{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;background:var(--terracotta);color:white;text-decoration:none;font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .3s;}
+        .btn-primary:hover{background:var(--gold);transform:translateY(-2px);}
+
+        footer{background:var(--deep-brown);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+        .footer-logo{font-family:var(--font-display);font-size:1.2rem;font-weight:300;color:var(--cream);}
+        .footer-copy{font-size:.72rem;color:rgba(247,243,238,.4);text-align:center;}
+        .footer-links{display:flex;gap:2rem;flex-wrap:wrap;}
+        .footer-links a{font-size:.72rem;color:rgba(247,243,238,.5);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .3s;}
+        .footer-links a:hover{color:var(--gold);}
+
+        @media(max-width:900px){.blog-hero,.blog-grid-wrap,.blog-filters,.blog-cta{padding-left:2rem;padding-right:2rem;} .blog-grid{grid-template-columns:1fr 1fr;} .navbar{padding:1.2rem 2rem;} nav{display:none;} .hamburger{display:flex;} footer{flex-direction:column;text-align:center;padding:2rem;} .footer-links{justify-content:center;}}
+        @media(max-width:600px){.blog-grid{grid-template-columns:1fr;} .art-modal-header,.art-modal-body{padding-left:1.5rem;padding-right:1.5rem;} .art-modal-close{margin-left:1.5rem;margin-right:1.5rem;} .art-modal-cover{height:200px;}}
+    </style>
+</head>
+<body>
+
+<div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" onclick="closeMobileMenu()">✕</button>
+    <a href="index.html" onclick="closeMobileMenu()">Início</a>
+    <a href="index.html#sobre" onclick="closeMobileMenu()">Sobre</a>
+    <a href="index.html#servicos" onclick="closeMobileMenu()">Serviços</a>
+    <a href="index.html#contato" onclick="closeMobileMenu()">Contato</a>
+</div>
+
+<header class="navbar" id="navbar">
+    <a href="index.html" class="logo">LC <span>Gastronômica</span></a>
+    <nav>
+        <a href="index.html">Início</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#servicos">Serviços</a>
+        <a href="index.html#consultores">Consultora</a>
+        <a href="blog.html" class="active">Blog</a>
+        <a href="index.html#contato">Contato</a>
+    </nav>
+    <div class="hamburger" onclick="openMobileMenu()"><span></span><span></span><span></span></div>
+</header>
+
+<section class="blog-hero">
+    <span class="blog-hero-tag">Conhecimento & Inspiração</span>
+    <h1>Blog <em>Gastronômico</em></h1>
+    <p>Artigos, tendências, técnicas e reflexões sobre o universo da gastronomia, consultoria e gestão de negócios alimentícios.</p>
+</section>
+
+<div class="blog-filters">
+    <span class="filter-label">Filtrar:</span>
+    <button class="filter-btn active" onclick="filterArticles('todos', this)">Todos</button>
+    <button class="filter-btn" onclick="filterArticles('cardapio', this)">Cardápio</button>
+    <button class="filter-btn" onclick="filterArticles('gestao', this)">Gestão</button>
+    <button class="filter-btn" onclick="filterArticles('tendencias', this)">Tendências</button>
+    <button class="filter-btn" onclick="filterArticles('eventos', this)">Eventos</button>
+    <button class="filter-btn" onclick="filterArticles('marketing', this)">Marketing</button>
+    <button class="filter-btn" onclick="filterArticles('critica', this)">Crítica</button>
+</div>
+
+<div class="blog-grid-wrap">
+    <div class="blog-grid" id="blogGrid">
+
+        <div class="article-card" data-cat="cardapio">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=600&q=80" alt="Engenharia de cardápio">
+                <span class="article-cat">Cardápio</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Jun 2025</span><span>8 min de leitura</span></div>
+                <h2 class="article-title">Engenharia de Cardápio: como transformar seu menu em máquina de lucro</h2>
+                <p class="article-excerpt">Descubra como a análise estratégica de popularidade e rentabilidade de cada prato pode revolucionar os resultados do seu restaurante sem mudar uma receita.</p>
+                <button class="article-read" onclick="openArticle(0)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+        <div class="article-card" data-cat="gestao">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80" alt="CMV e controle de custos">
+                <span class="article-cat">Gestão</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Mai 2025</span><span>10 min de leitura</span></div>
+                <h2 class="article-title">CMV na prática: entenda e controle o principal indicador do seu restaurante</h2>
+                <p class="article-excerpt">O Custo de Mercadoria Vendida é o indicador mais ignorado e mais importante de qualquer negócio de alimentação. Aprenda a calcular, monitorar e reduzir o seu.</p>
+                <button class="article-read" onclick="openArticle(1)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+        <div class="article-card" data-cat="tendencias">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?w=600&q=80" alt="Tendências gastronômicas">
+                <span class="article-cat">Tendências</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Abr 2025</span><span>7 min de leitura</span></div>
+                <h2 class="article-title">As 10 tendências gastronômicas que vão dominar 2025 e 2026</h2>
+                <p class="article-excerpt">Da fermentação artesanal ao menu de degustação vegano, passando pelos ingredientes nativos brasileiros: o que chefs e consultores precisam saber agora.</p>
+                <button class="article-read" onclick="openArticle(2)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+        <div class="article-card" data-cat="eventos">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Planejamento de eventos gastronômicos">
+                <span class="article-cat">Eventos</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Mar 2025</span><span>9 min de leitura</span></div>
+                <h2 class="article-title">Como planejar um evento gastronômico inesquecível do zero</h2>
+                <p class="article-excerpt">Cronograma, conceito, cardápio, equipe, fornecedores e contingências: o guia completo para quem quer entregar experiências gastronômicas de alto nível.</p>
+                <button class="article-read" onclick="openArticle(3)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+        <div class="article-card" data-cat="marketing">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&q=80" alt="Marketing para restaurantes">
+                <span class="article-cat">Marketing</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Fev 2025</span><span>6 min de leitura</span></div>
+                <h2 class="article-title">Instagram para restaurantes: estratégias que realmente funcionam em 2025</h2>
+                <p class="article-excerpt">Muito além de fotos bonitas: como criar uma presença digital autêntica que atrai clientes, constrói comunidade e posiciona seu restaurante como referência.</p>
+                <button class="article-read" onclick="openArticle(4)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+        <div class="article-card" data-cat="critica">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Crítica gastronômica">
+                <span class="article-cat">Crítica</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Jan 2025</span><span>11 min de leitura</span></div>
+                <h2 class="article-title">O que a crítica gastronômica realmente avalia — e como se preparar para ela</h2>
+                <p class="article-excerpt">Uma crítica bem-feita vai muito além da comida. Entenda os critérios que guiam os avaliadores e como seu restaurante pode se destacar positivamente.</p>
+                <button class="article-read" onclick="openArticle(5)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+        <div class="article-card" data-cat="gestao">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="Liderança na cozinha">
+                <span class="article-cat">Gestão</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Dez 2024</span><span>8 min de leitura</span></div>
+                <h2 class="article-title">Liderança na cozinha: como formar e reter uma equipe de alta performance</h2>
+                <p class="article-excerpt">O maior desafio dos restaurantes hoje não é o cliente — é o colaborador. Veja como criar uma cultura de cozinha que inspira, desenvolve e retém talentos.</p>
+                <button class="article-read" onclick="openArticle(6)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+        <div class="article-card" data-cat="cardapio">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80" alt="Gastronomia brasileira">
+                <span class="article-cat">Cardápio</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Nov 2024</span><span>9 min de leitura</span></div>
+                <h2 class="article-title">Ingredientes nativos brasileiros: o ouro que está no seu quintal e no seu cardápio</h2>
+                <p class="article-excerpt">Jambu, tucupi, baru, umbu, priprioca, cacau nativo... Conheça os ingredientes que estão colocando a gastronomia brasileira no mapa mundial e como usá-los.</p>
+                <button class="article-read" onclick="openArticle(7)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+        <div class="article-card" data-cat="tendencias">
+            <div class="article-img-wrap">
+                <img class="article-img" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80" alt="Gastronomia sustentável">
+                <span class="article-cat">Tendências</span>
+            </div>
+            <div class="article-body">
+                <div class="article-meta"><span>Out 2024</span><span>7 min de leitura</span></div>
+                <h2 class="article-title">Gastronomia sustentável: como reduzir o desperdício e aumentar a rentabilidade ao mesmo tempo</h2>
+                <p class="article-excerpt">Sustentabilidade deixou de ser diferencial e virou exigência. Saiba como adotar práticas de cozinha sustentável que agradam clientes, reduzem custos e preservam o planeta.</p>
+                <button class="article-read" onclick="openArticle(8)">Ler artigo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAIS DOS ARTIGOS -->
+<div class="art-modal-overlay" id="artModal" onclick="closeArticleOutside(event)">
+  <div class="art-modal" id="artModalBox">
+    <img id="artModalCover" class="art-modal-cover" src="" alt="">
+    <div class="art-modal-header">
+      <span class="art-modal-cat" id="artModalCat"></span>
+      <h1 class="art-modal-title" id="artModalTitle"></h1>
+      <div class="art-modal-meta" id="artModalMeta"></div>
+    </div>
+    <div class="art-modal-body" id="artModalBody"></div>
+    <button class="art-modal-close" onclick="closeArticle()">← Voltar ao blog</button>
+  </div>
+</div>
+
+<section class="blog-cta">
+    <h2>Quer conteúdo exclusivo?</h2>
+    <p>Fale comigo pelo WhatsApp e receba dicas semanais de gastronomia e gestão.</p>
+    <a href="https://wa.me/5521984821444?text=Olá Lienys! Quero receber suas dicas gastronômicas." target="_blank" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        Conecte-se no WhatsApp
+    </a>
+</section>
+
+<footer>
+    <div class="footer-logo">LC – Consultoria e Crítica Gastronômica</div>
+    <p class="footer-copy">© 2025 Lienys Carvalho. Todos os direitos reservados.</p>
+    <div class="footer-links">
+        <a href="index.html">Início</a>
+        <a href="index.html#contato">Contato</a>
+        <a href="privacidade.html">Política de Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+    </div>
+</footer>
+
+<script>
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+function openMobileMenu(){document.getElementById('mobileMenu').classList.add('active');document.body.style.overflow='hidden';}
+function closeMobileMenu(){document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow='';}
+
+const articles = [
+  {
+    cat:'Cardápio', date:'Junho 2025', read:'8 min',
+    img:'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=900&q=80',
+    title:'Engenharia de Cardápio: como transformar seu menu em máquina de lucro',
+    body:`<h3>O que é engenharia de cardápio?</h3>
+    <p>Engenharia de cardápio é a metodologia que analisa cada item do seu menu em duas dimensões fundamentais: <strong>popularidade</strong> (quantas vezes é pedido) e <strong>rentabilidade</strong> (quanto de margem ele gera). Com essa análise, é possível categorizar cada prato em quatro grupos estratégicos e tomar decisões baseadas em dados, não em achismos.</p>
+    <blockquote>"Um cardápio bem construído é o melhor vendedor que um restaurante pode ter — e trabalha 24 horas por dia, sete dias por semana."</blockquote>
+    <h3>Os quatro quadrantes do cardápio</h3>
+    <ul>
+      <li><strong>Estrelas:</strong> alta popularidade + alta rentabilidade. Destaque-os no menu, fotografe-os bem, promova-os sempre.</li>
+      <li><strong>Cavalos de batalha:</strong> alta popularidade + baixa rentabilidade. São queridos pelos clientes mas drenam sua margem. Reprecifique sutilmente ou reduza o custo de produção.</li>
+      <li><strong>Quebra-cabeças:</strong> baixa popularidade + alta rentabilidade. Pratos promissores que não emplacam. Repositione-os visualmente ou treine a equipe para sugeri-los.</li>
+      <li><strong>Cães:</strong> baixa popularidade + baixa rentabilidade. Candidatos à remoção. Mantenha apenas se tiverem função estratégica (ex: opção vegetariana obrigatória).</li>
+    </ul>
+    <h3>Como calcular a margem de contribuição</h3>
+    <p>A margem de contribuição de um prato é o preço de venda menos o custo direto de produção (fichas técnicas). O custo deve incluir todos os insumos — ingredientes, embalagem, temperos — sem incluir custos fixos como mão de obra e aluguel, que são tratados separadamente.</p>
+    <h3>Aplicando no seu restaurante</h3>
+    <p>Para aplicar a engenharia de cardápio, você precisa de dois dados básicos: o custo de cada prato (ficha técnica) e a quantidade vendida de cada item em um período (geralmente 90 dias). Com esses dados em mãos, é possível gerar a matriz e tomar decisões que podem aumentar a margem média do restaurante em 8 a 15% sem alterar nenhuma receita.</p>
+    <h3>A importância do design visual do menu</h3>
+    <p>A posição, o tamanho da foto, a descrição e até a cor do preço influenciam o que o cliente escolhe. Técnicas de psicologia do consumidor mostram que itens posicionados no canto superior direito da página ou cardápio têm 27% mais chances de serem escolhidos. Não subestime o poder do design na hora de apresentar seus pratos.</p>`
+  },
+  {
+    cat:'Gestão', date:'Maio 2025', read:'10 min',
+    img:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&q=80',
+    title:'CMV na prática: entenda e controle o principal indicador do seu restaurante',
+    body:`<h3>O que é CMV e por que ele importa</h3>
+    <p>CMV significa Custo de Mercadoria Vendida — o total gasto em insumos para produzir tudo o que foi vendido em um período. É calculado assim: <strong>Estoque inicial + Compras do período − Estoque final = CMV</strong>. Parece simples, mas a maioria dos restauradores não acompanha este número com a frequência necessária.</p>
+    <blockquote>"Você não pode gerenciar o que não mede. E no restaurante, o CMV é o principal sinal vital do negócio."</blockquote>
+    <h3>Qual deve ser o CMV ideal?</h3>
+    <p>O CMV ideal varia por segmento, mas como referência geral:</p>
+    <ul>
+      <li>Restaurantes à la carte: 28% a 35% da receita bruta</li>
+      <li>Churrascarias e rodízios: 35% a 42%</li>
+      <li>Lanchonetes e fast food: 25% a 32%</li>
+      <li>Pizzarias: 22% a 30%</li>
+      <li>Bistrôs e alta gastronomia: 30% a 38%</li>
+    </ul>
+    <h3>Principais causas de CMV elevado</h3>
+    <ul>
+      <li>Fichas técnicas desatualizadas ou inexistentes</li>
+      <li>Desvios e furtos internos (responsável por até 30% das perdas)</li>
+      <li>Desperdício na produção por falta de padronização</li>
+      <li>Compras sem cotação e sem negociação com fornecedores</li>
+      <li>Estoque descontrolado com vencimentos e perdas excessivas</li>
+      <li>Precificação inadequada sem base no custo real</li>
+    </ul>
+    <h3>Como reduzir o CMV de forma sustentável</h3>
+    <p>A redução do CMV não deve ser feita sacrificando a qualidade dos insumos — esse é o erro mais comum. As estratégias eficazes passam por: implantação de fichas técnicas com custo por porção, inventário rotativo semanal, negociação mensal com fornecedores, treinamento da equipe sobre porcionamento e redução de desperdício.</p>
+    <h3>Ferramentas para controle</h3>
+    <p>Existem softwares de gestão como Sischef, Menu Certo e GrandChef que automatizam o cálculo do CMV com integração ao estoque. Para quem ainda usa planilhas, uma boa planilha de ficha técnica e controle de estoque já resolve a maioria dos problemas. O mais importante é a consistência no processo, não a ferramenta.</p>`
+  },
+  {
+    cat:'Tendências', date:'Abril 2025', read:'7 min',
+    img:'https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?w=900&q=80',
+    title:'As 10 tendências gastronômicas que vão dominar 2025 e 2026',
+    body:`<h3>A gastronomia em transformação constante</h3>
+    <p>O setor gastronômico é um dos que mais se reinventa. Influenciado por comportamentos do consumidor, crises climáticas, movimentos culturais e inovações tecnológicas, o que vai à mesa nunca foi tão relevante para além do simples ato de se alimentar.</p>
+    <h3>As 10 tendências do momento</h3>
+    <ul>
+      <li><strong>1. Ingredientes nativos brasileiros no centro do prato:</strong> O Brasil finalmente olha para dentro. Jambu, tucupi, baru, guariroba e outros ingredientes endêmicos ganham espaço nos menus de alta gastronomia.</li>
+      <li><strong>2. Fermentação artesanal:</strong> Kombuchas, kefires, pães de fermentação natural, missô artesanal e vegetais fermentados ganham popularidade por seus benefícios à saúde e complexidade de sabor.</li>
+      <li><strong>3. Menus de degustação veganos de luxo:</strong> A alta gastronomia plant-based deixou de ser alternativa e virou protagonista em restaurantes premiados do mundo todo.</li>
+      <li><strong>4. Cozinha do desperdício zero:</strong> Usar a planta inteira, o animal do focinho ao rabo e criar pratos com o que seria descartado é uma filosofia que une sustentabilidade e criatividade.</li>
+      <li><strong>5. Experiências gastronômicas imersivas:</strong> Jantares com performance, menus narrativos, experiências multissensoriais — a refeição como espetáculo.</li>
+      <li><strong>6. Transparência total da cadeia:</strong> O consumidor quer saber de onde vem o ingrediente, quem produziu e como foi cultivado. A rastreabilidade virou diferencial competitivo.</li>
+      <li><strong>7. Bebidas funcionais e sem álcool sofisticadas:</strong> Mocktails elaborados, kombuchas premium e lattes adaptogênicos preenchem o espaço antes ocupado apenas por drinks alcoólicos.</li>
+      <li><strong>8. Inteligência artificial na gestão:</strong> Ferramentas de IA estão sendo usadas para prever demanda, personalizar menus, otimizar compras e reduzir desperdício.</li>
+      <li><strong>9. Cozinha regional brasileira valorizada:</strong> A gastronomia do Nordeste, Norte e Centro-Oeste ganha reconhecimento nacional e internacional com chefs que abraçam suas raízes.</li>
+      <li><strong>10. Pop-ups e experiências temporárias:</strong> O efêmero atrai. Jantares secretos, restaurantes temporários e colabs entre chefs criam desejo e exclusividade.</li>
+    </ul>
+    <h3>Como usar essas tendências estrategicamente</h3>
+    <p>Não se trata de seguir todas as tendências ao mesmo tempo — isso seria incoerente. O ideal é identificar quais fazem sentido para a identidade do seu negócio e do seu público, e incorporá-las de forma autêntica e gradual.</p>`
+  },
+  {
+    cat:'Eventos', date:'Março 2025', read:'9 min',
+    img:'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=900&q=80',
+    title:'Como planejar um evento gastronômico inesquecível do zero',
+    body:`<h3>Por que eventos gastronômicos merecem atenção especial</h3>
+    <p>Um evento gastronômico bem executado tem o poder de criar memórias afetivas poderosas, posicionar uma marca, fidelizar clientes e gerar conteúdo orgânico espontâneo. Mas um evento mal planejado pode destruir reputações construídas em anos. A diferença entre os dois está no planejamento.</p>
+    <h3>Etapa 1: Conceito e narrativa</h3>
+    <p>Todo grande evento começa com uma história. Qual é a experiência que você quer proporcionar? Qual é o tema, a emoção, a sensação que o convidado deve levar para casa? A narrativa gastronômica deve guiar cada decisão — do cardápio à trilha sonora, da decoração à iluminação.</p>
+    <h3>Etapa 2: Definição de público e formato</h3>
+    <ul>
+      <li>Número de convidados (impacta toda a logística)</li>
+      <li>Perfil do público (faixa etária, preferências alimentares, restrições)</li>
+      <li>Formato de serviço: buffet, empratado, finger food, estações</li>
+      <li>Tipo de evento: jantar, coquetel, workshop, festival</li>
+    </ul>
+    <h3>Etapa 3: O cardápio como protagonista</h3>
+    <p>Para eventos, o cardápio deve ser pensado de forma ainda mais estratégica do que no restaurante. Priorize pratos que possam ser produzidos em escala sem perder qualidade, que sejam visualmente impactantes e que contem a história do evento.</p>
+    <blockquote>"Um evento gastronômico de sucesso é aquele em que os convidados lembram do que comeram meses depois. Isso é o que perseguimos."</blockquote>
+    <h3>Etapa 4: Logística e equipe</h3>
+    <p>A proporção ideal de equipe para eventos empratados é de 1 garçom para cada 8-10 convidados. Para coquetéis com finger food, 1 para cada 15. A cozinha deve ter um chef de brigada para cada 30-40 porções simultâneas. Treine a equipe no conceito do evento, não apenas nas funções técnicas.</p>
+    <h3>Etapa 5: Contingências e plano B</h3>
+    <p>Todo evento deve ter um plano B para: ingrediente não disponível no dia, queda de energia, ausência de membro da equipe, mudança climática (para eventos ao ar livre). Improviso acontece — o diferencial é quando ele não é percebido pelo cliente.</p>
+    <h3>Check-list final (48h antes)</h3>
+    <ul>
+      <li>✦ Todos os insumos confirmados e recebidos</li>
+      <li>✦ Equipe confirmada e briefada</li>
+      <li>✦ Equipamentos testados e funcionando</li>
+      <li>✦ Cronograma de produção detalhado</li>
+      <li>✦ Contato de emergência de fornecedores</li>
+      <li>✦ Degustação e aprovação final do cardápio</li>
+    </ul>`
+  },
+  {
+    cat:'Marketing', date:'Fevereiro 2025', read:'6 min',
+    img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=900&q=80',
+    title:'Instagram para restaurantes: estratégias que realmente funcionam em 2025',
+    body:`<h3>O cenário digital em 2025</h3>
+    <p>O Instagram segue sendo a plataforma mais relevante para restaurantes no Brasil, mas as regras do jogo mudaram radicalmente. O alcance orgânico de fotos estáticas caiu drasticamente. Reels, autenticidade e comunidade são as palavras do momento.</p>
+    <h3>Os 5 pilares do Instagram gastronômico eficaz</h3>
+    <ul>
+      <li><strong>1. Consistência visual:</strong> Não significa que todos os posts pareçam iguais, mas que há uma paleta, um estilo e uma atmosfera reconhecíveis. O perfil precisa ser "instagramável" como um todo, não post a post.</li>
+      <li><strong>2. Conteúdo em vídeo:</strong> Reels de bastidores, processo de preparo, o chef falando sobre os pratos, clientes satisfeitos. Vídeos geram 3x mais alcance que fotos no feed atual.</li>
+      <li><strong>3. Stories consistentes:</strong> Os Stories são onde a comunidade se forma. Use para mostrar o dia a dia, enquetes, perguntas, novidades e promoções rápidas. Pelo menos 5 stories por dia.</li>
+      <li><strong>4. Resposta às interações:</strong> Comentários e DMs respondidos em até 2 horas geram mais engajamento futuro. O algoritmo favorece contas que interagem ativamente.</li>
+      <li><strong>5. Hashtags estratégicas:</strong> Use de 8 a 15 hashtags por post, misturando muito populares (#gastronomia), médias (#restauranterio) e específicas (#fingerfoodrio). Evite hashtags proibidas ou saturadas.</li>
+    </ul>
+    <h3>Fotografia gastronômica que converte</h3>
+    <p>Não é preciso ter câmera profissional — um iPhone recente com boa iluminação natural já faz milagres. Os princípios são: luz natural sempre que possível, fundo neutro que não compete com o prato, composição com regra dos terços e textura visível nos ingredientes.</p>
+    <blockquote>"As pessoas comem primeiro com os olhos. Na era das redes sociais, elas também decidem onde comer com os olhos — através da tela do celular."</blockquote>
+    <h3>A métrica que importa de verdade</h3>
+    <p>Esqueça o número de seguidores como indicador de sucesso. O que importa é: quantos clientes novos chegaram ao seu restaurante vindos do Instagram? Use links na bio, formulários de reserva com campo "como nos conheceu" e cupons exclusivos para Instagram para rastrear isso com precisão.</p>`
+  },
+  {
+    cat:'Crítica Gastronômica', date:'Janeiro 2025', read:'11 min',
+    img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80',
+    title:'O que a crítica gastronômica realmente avalia — e como se preparar para ela',
+    body:`<h3>A crítica gastronômica moderna</h3>
+    <p>A crítica gastronômica passou por uma revolução nas últimas duas décadas. De monopólio de especialistas em grandes jornais, hoje se democratizou nas redes sociais, apps de avaliação e influenciadores digitais. Mas os critérios de uma boa crítica — seja ela profissional ou digital — guardam muito em comum.</p>
+    <h3>O que um crítico avalia</h3>
+    <ul>
+      <li><strong>Técnica e execução:</strong> Os pratos são bem executados? Os pontos de cocção estão corretos? Há domínio das técnicas propostas?</li>
+      <li><strong>Identidade e coerência:</strong> O cardápio tem um fio condutor? O conceito do restaurante é claro e consistente do início ao fim?</li>
+      <li><strong>Uso de ingredientes:</strong> A qualidade dos insumos é percebida no prato? Há sazonalidade? O restaurante tem relação com produtores locais?</li>
+      <li><strong>Experiência completa:</strong> Serviço, ambiente, tempo de espera, temperatura dos pratos, apresentação, trilha sonora — tudo é avaliado.</li>
+      <li><strong>Precificação justa:</strong> O que é entregue justifica o que é cobrado? A percepção de valor precisa ser positiva.</li>
+      <li><strong>Autenticidade:</strong> O restaurante tem personalidade própria ou é uma cópia de tendências? Autenticidade é cada vez mais valorizada.</li>
+    </ul>
+    <blockquote>"Um restaurante não precisa ser perfeito para receber uma boa crítica. Ele precisa ser honesto e entregar o que promete — de forma consistente."</blockquote>
+    <h3>Como se preparar para uma visita de crítico</h3>
+    <p>A verdade é que você nunca sabe quando um crítico está na sua mesa — e é exatamente por isso que todo cliente deve ser recebido como se fosse o mais importante. Treine sua equipe para ter consistência todos os dias, não apenas nos dias de gala.</p>
+    <h3>Gerenciando críticas negativas nas redes</h3>
+    <p>Toda crítica negativa pública é uma oportunidade de demonstrar profissionalismo. Responda sempre, de forma educada e construtiva. Nunca discuta publicamente. Se a crítica tiver fundamento, reconheça e apresente ações de melhoria. Esse posicionamento vale mais do que a crítica em si.</p>
+    <h3>A crítica como ferramenta de melhoria contínua</h3>
+    <p>Os restaurantes mais bem-sucedidos do mundo são aqueles que leem e debatem todas as avaliações — positivas e negativas — como parte da rotina de gestão. Uma planilha simples com feedback dos clientes, atualizada semanalmente, é uma das ferramentas mais poderosas que um restaurante pode ter.</p>`
+  },
+  {
+    cat:'Gestão', date:'Dezembro 2024', read:'8 min',
+    img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=80',
+    title:'Liderança na cozinha: como formar e reter uma equipe de alta performance',
+    body:`<h3>O maior desafio dos restaurantes hoje</h3>
+    <p>A rotatividade no setor de alimentação é historicamente alta — em torno de 40% ao ano no Brasil. Isso tem um custo real: estima-se que substituir um funcionário custa entre 50% e 200% do salário anual do cargo, considerando recrutamento, treinamento e queda de produtividade durante a transição.</p>
+    <h3>Por que bons profissionais saem</h3>
+    <ul>
+      <li>Falta de reconhecimento e perspectiva de crescimento</li>
+      <li>Ambiente tóxico e liderança por medo (ainda comum em cozinhas profissionais)</li>
+      <li>Jornadas excessivas sem compensação adequada</li>
+      <li>Falta de treinamento e desenvolvimento</li>
+      <li>Comunicação deficiente entre gestão e equipe</li>
+    </ul>
+    <blockquote>"A cozinha brigada do século XIX, com gritos e hierarquia rígida, não serve mais. O profissional de hoje exige propósito, respeito e desenvolvimento."</blockquote>
+    <h3>O perfil do líder de cozinha moderno</h3>
+    <p>O chef-líder de hoje precisa equilibrar domínio técnico com habilidades humanas. Empatia, comunicação clara, capacidade de dar e receber feedback, visão de negócio e habilidade de inspirar — são competências tão importantes quanto saber preparar um bom fundo.</p>
+    <h3>Estratégias práticas de retenção</h3>
+    <ul>
+      <li>Implante reuniões semanais de equipe (não sobre problemas, mas sobre aprendizados)</li>
+      <li>Crie um plano de desenvolvimento individual para cada colaborador</li>
+      <li>Reconheça publicamente as conquistas — um elogio na frente da equipe vale mais que um aumento</li>
+      <li>Estabeleça horários previsíveis sempre que possível</li>
+      <li>Crie uma cultura de segurança psicológica onde erros são aprendizados, não motivo de humilhação</li>
+      <li>Envolva a equipe na criação de novos pratos — pertencimento gera engajamento</li>
+    </ul>
+    <h3>Treinamento como investimento, não custo</h3>
+    <p>Restaurantes que investem 2% do faturamento em treinamento têm, em média, 35% menos rotatividade e 20% mais satisfação do cliente. O cálculo é simples: treinamento é barato comparado ao custo da rotatividade e da baixa qualidade.</p>`
+  },
+  {
+    cat:'Cardápio', date:'Novembro 2024', read:'9 min',
+    img:'https://images.unsplash.com/photo-1547592180-85f173990554?w=900&q=80',
+    title:'Ingredientes nativos brasileiros: o ouro que está no seu quintal e no seu cardápio',
+    body:`<h3>O Brasil olhando para dentro</h3>
+    <p>Por décadas, a gastronomia brasileira olhou para a Europa como referência. Hoje, o movimento é inverso: chefs de Copenhague, Paris e Tóquio vêm ao Brasil aprender sobre nossos ingredientes. É hora de valorizarmos o que é nosso.</p>
+    <h3>Os 10 ingredientes nativos que você deve conhecer</h3>
+    <ul>
+      <li><strong>Tucupi:</strong> Líquido extraído da mandioca brava, fermentado. Sabor ácido e umami intenso. Base da culinária paraense, agora presente nos melhores restaurantes do mundo.</li>
+      <li><strong>Jambu:</strong> Erva que provoca dormência na boca. Usado no pato no tucupi e no tacacá, traz uma experiência sensorial única.</li>
+      <li><strong>Baru:</strong> Oleaginosa do Cerrado com sabor entre castanha e amendoim torrado. Alta proteína e extraordinária em doces, sobremesas e granolas.</li>
+      <li><strong>Priprioca:</strong> Raiz aromática amazônica com notas de terra, floral e madeira. Usada pela alta gastronomia em infusões, óleos e géis.</li>
+      <li><strong>Umbu:</strong> Fruta do Semiárido nordestino com acidez intensa. Excelente em doces, geleias, cevichés e drinks.</li>
+      <li><strong>Cacau nativo:</strong> O cacau brasileiro tem variedades nativas com perfis de sabor incomparáveis às variedades comerciais. A feijoa do cacau artesanal valoriza o produtor e o produto final.</li>
+      <li><strong>Guariroba:</strong> Palmito amargo do Cerrado, muito usado no Centro-Oeste. Funciona perfeitamente em refogados, tortas e como acompanhamento de carnes.</li>
+      <li><strong>Caju:</strong> Tão mais do que a castanha. O pedúnculo do caju (aquela parte "suculenta") é um ingrediente versátil e ainda pouco explorado em criações autorais.</li>
+      <li><strong>Pirarucu:</strong> O maior peixe de escamas de água doce do mundo. Versátil, nobre e cada vez mais presente nos cardápios sofisticados.</li>
+      <li><strong>Ervas da Caatinga:</strong> Aroeira, mandacaru, xique-xique — a flora do Semiárido oferece sabores únicos esperando para serem explorados.</li>
+    </ul>
+    <blockquote>"Usar ingredientes nativos não é apenas uma tendência — é um ato político, cultural e econômico de valorização do Brasil."</blockquote>
+    <h3>Como inserir no seu cardápio</h3>
+    <p>Comece devagar: introduza um ingrediente nativo por temporada. Pesquise fornecedores de produtores locais e comunidades tradicionais. Conte a história do ingrediente na descrição do prato — isso agrega valor percebido e educa o cliente.</p>`
+  },
+  {
+    cat:'Tendências', date:'Outubro 2024', read:'7 min',
+    img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&q=80',
+    title:'Gastronomia sustentável: como reduzir o desperdício e aumentar a rentabilidade ao mesmo tempo',
+    body:`<h3>Sustentabilidade que vai além da imagem</h3>
+    <p>Sustentabilidade na gastronomia não é mais um diferencial de marketing — é uma necessidade econômica e ética. O Brasil desperdiça cerca de 46 kg de alimento per capita por ano. Os restaurantes têm um papel fundamental na inversão desse cenário — e podem lucrar com isso.</p>
+    <h3>A matemática do desperdício</h3>
+    <p>Em um restaurante que fatura R$ 100.000 por mês com CMV de 35%, uma redução de 5% no desperdício representa R$ 1.750 de economia mensal — ou R$ 21.000 por ano. Sem reduzir qualidade, sem mudar cardápio, apenas gerenciando melhor os recursos.</p>
+    <blockquote>"O chef mais sustentável não é necessariamente o mais eco-chic — é o mais eficiente. E eficiência sempre foi rentável."</blockquote>
+    <h3>10 práticas de cozinha sustentável</h3>
+    <ul>
+      <li><strong>1. Aproveitamento integral:</strong> Use talos, cascas, sementes e aparas que seriam descartadas em caldos, farofas, óleos infusionados e chips.</li>
+      <li><strong>2. Cardápio sazonal:</strong> Ingredientes da estação são mais baratos, mais frescos e têm menor pegada de carbono.</li>
+      <li><strong>3. Relação com produtores locais:</strong> Compra direta reduz intermediários, garante frescor e apoia a economia local.</li>
+      <li><strong>4. Porcionamento preciso:</strong> Fichas técnicas rigorosas eliminam o desperdício na produção. Um grama a mais por prato equivale a quilos perdidos por semana.</li>
+      <li><strong>5. FIFO no estoque:</strong> First In, First Out — o que entra primeiro sai primeiro. Regra básica que reduz vencimentos e perdas.</li>
+      <li><strong>6. Compostagem:</strong> O que sobra da cozinha vira adubo. Parcerias com hortas urbanas e produtores locais transformam resíduos em recursos.</li>
+      <li><strong>7. Embalagens responsáveis:</strong> Para delivery, invista em embalagens compostáveis ou recicláveis. Clientes valorizam e é possível comunicar isso como diferencial.</li>
+      <li><strong>8. Gestão de energia:</strong> Equipamentos bem calibrados, desligamento correto e uso de tecnologia LED reduzem até 30% do consumo energético.</li>
+      <li><strong>9. Água consciente:</strong> Captação de água da chuva, torneiras com temporizador e reaproveitamento de água de cocção são práticas simples e eficazes.</li>
+      <li><strong>10. Cardápio reduzido e rotativo:</strong> Menus menores e com rotatividade semanal reduzem estoque, simplificam a operação e aumentam a percepção de frescor e exclusividade.</li>
+    </ul>
+    <h3>Como comunicar sua sustentabilidade</h3>
+    <p>Seja autêntico. Documente suas práticas, mostre seus fornecedores, conte as histórias por trás das escolhas. O consumidor consciente detecta quando a sustentabilidade é apenas fachada — e quando é genuína, se torna um embaixador espontâneo da sua marca.</p>`
+  }
+];
+
+function openArticle(idx) {
+  const a = articles[idx];
+  document.getElementById('artModalCover').src = a.img;
+  document.getElementById('artModalCover').alt = a.title;
+  document.getElementById('artModalCat').textContent = a.cat;
+  document.getElementById('artModalTitle').textContent = a.title;
+  document.getElementById('artModalMeta').textContent = `${a.date}  ·  ${a.read} de leitura`;
+  document.getElementById('artModalBody').innerHTML = a.body;
+  document.getElementById('artModal').classList.add('active');
+  document.getElementById('artModalBox').scrollTop = 0;
+  document.getElementById('artModal').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+function closeArticle() {
+  document.getElementById('artModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function closeArticleOutside(e) {
+  if (e.target === document.getElementById('artModal')) closeArticle();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeArticle(); });
+
+function filterArticles(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.article-card').forEach(card => {
+    card.style.display = (cat === 'todos' || card.dataset.cat === cat) ? 'flex' : 'none';
+  });
+}
+</script>
+</body>
+</html>

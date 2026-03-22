@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LC – Consultoria e Crítica Gastronômica</title>
+    <!-- FAVICON SVG inline -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='8' fill='%232C1F14'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-family='Georgia,serif' fill='%23B8965A'>LC</text><line x1='10' y1='52' x2='54' y2='52' stroke='%23C4633A' stroke-width='3'/></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,998 +22,228 @@
             --font-display: 'Cormorant Garamond', Georgia, serif;
             --font-body: 'DM Sans', sans-serif;
         }
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
-
-        body {
-            background: var(--cream);
-            color: var(--charcoal);
-            font-family: var(--font-body);
-            font-weight: 300;
-            overflow-x: hidden;
-        }
-
-        /* ─── SCROLL BAR ─── */
+        body { background: var(--cream); color: var(--charcoal); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--cream); }
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
-        /* ─── NAVBAR ─── */
+        /* ── NAVBAR ── */
         .navbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
             padding: 1.25rem 4rem;
-            background: rgba(247,243,238,0.92);
+            background: rgba(247,243,238,0.94);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             transition: all 0.4s ease;
         }
-
-        .navbar.scrolled {
-            padding: 0.9rem 4rem;
-            box-shadow: 0 4px 30px rgba(28,28,26,0.06);
-        }
-
-        .logo {
-            font-family: var(--font-display);
-            font-size: 1.6rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            color: var(--deep-brown);
-            text-decoration: none;
-        }
-
+        .navbar.scrolled { padding: 0.9rem 4rem; box-shadow: 0 4px 30px rgba(28,28,26,0.06); }
+        .logo { font-family: var(--font-display); font-size: 1.55rem; font-weight: 600; letter-spacing: 0.02em; color: var(--deep-brown); text-decoration: none; }
         .logo span { color: var(--terracotta); font-style: italic; }
-
-        nav {
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-        }
-
-        nav a {
-            font-family: var(--font-body);
-            font-size: 0.8rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--charcoal);
-            text-decoration: none;
-            position: relative;
-            transition: color 0.3s;
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px; left: 0;
-            width: 0; height: 1px;
-            background: var(--terracotta);
-            transition: width 0.35s ease;
-        }
-
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--charcoal); text-decoration: none; position: relative; transition: color 0.3s; }
+        nav a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--terracotta); transition: width 0.35s ease; }
         nav a:hover { color: var(--terracotta); }
         nav a:hover::after { width: 100%; }
+        .nav-social { display: flex; align-items: center; gap: 0.7rem; }
+        .nav-social a { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 50%; color: var(--charcoal); text-decoration: none; transition: all 0.3s; font-size: 0.85rem; }
+        .nav-social a:hover { background: var(--terracotta); border-color: var(--terracotta); color: white; transform: translateY(-2px); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: var(--charcoal); transition: all 0.3s; }
 
-        .nav-social {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        /* ── MOBILE MENU ── */
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--deep-brown); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { font-family: var(--font-display); font-size: 2.5rem; font-weight: 300; color: var(--cream); text-decoration: none; transition: color 0.3s; }
+        .mobile-menu a:hover { color: var(--gold); }
+        .mobile-close { position: absolute; top: 1.5rem; right: 2rem; background: none; border: none; color: var(--cream); font-size: 2rem; cursor: pointer; line-height: 1; }
 
-        .nav-social a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 34px; height: 34px;
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            color: var(--charcoal);
-            text-decoration: none;
-            transition: all 0.3s;
-            font-size: 0.85rem;
-        }
-
-        .nav-social a:hover {
-            background: var(--terracotta);
-            border-color: var(--terracotta);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 24px; height: 2px;
-            background: var(--charcoal);
-            transition: all 0.3s;
-        }
-
-        /* ─── HERO ─── */
-        .hero {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-left {
-            background: var(--deep-brown);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 8rem 5rem 5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-left::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80') center/cover;
-            opacity: 0.35;
-        }
-
-        .hero-text {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-eyebrow {
-            font-size: 0.72rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--gold);
-            margin-bottom: 1.2rem;
-            animation: fadeUp 0.8s ease both;
-        }
-
-        .hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(3rem, 5vw, 5rem);
-            font-weight: 300;
-            line-height: 1.1;
-            color: var(--cream);
-            margin-bottom: 1.8rem;
-            animation: fadeUp 0.8s 0.15s ease both;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--gold);
-        }
-
-        .hero-desc {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: rgba(247,243,238,0.7);
-            max-width: 380px;
-            margin-bottom: 2.5rem;
-            animation: fadeUp 0.8s 0.3s ease both;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.9rem 2rem;
-            background: var(--terracotta);
-            color: white;
-            text-decoration: none;
-            font-size: 0.78rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            animation: fadeUp 0.8s 0.45s ease both;
-        }
-
-        .btn-primary:hover {
-            background: var(--gold);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(196,99,58,0.3);
-        }
-
-        .btn-primary svg { transition: transform 0.3s; }
-        .btn-primary:hover svg { transform: translateX(4px); }
-
-        .btn-outline {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.9rem 2rem;
-            background: transparent;
-            color: var(--charcoal);
-            text-decoration: none;
-            font-size: 0.78rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            border: 1px solid var(--charcoal);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-outline:hover {
-            background: var(--charcoal);
-            color: var(--cream);
-        }
-
-        .hero-right {
-            background: var(--cream);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 8rem 5rem 5rem;
-            gap: 2rem;
-        }
-
-        .hero-images {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            width: 100%;
-            max-width: 420px;
-        }
-
-        .hero-img {
-            border-radius: 0;
-            overflow: hidden;
-            animation: fadeUp 0.8s ease both;
-        }
-
+        /* ── HERO ── */
+        .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+        .hero-left { background: var(--deep-brown); display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 5rem 5rem; position: relative; overflow: hidden; }
+        .hero-left::before { content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80') center/cover; opacity: 0.35; }
+        .hero-text { position: relative; z-index: 2; }
+        .hero-eyebrow { font-size: 0.72rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 1.2rem; animation: fadeUp 0.8s ease both; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 5vw, 5rem); font-weight: 300; line-height: 1.1; color: var(--cream); margin-bottom: 1.8rem; animation: fadeUp 0.8s 0.15s ease both; }
+        .hero h1 em { font-style: italic; color: var(--gold); }
+        .hero-desc { font-size: 1rem; line-height: 1.8; color: rgba(247,243,238,0.7); max-width: 380px; margin-bottom: 2.5rem; animation: fadeUp 0.8s 0.3s ease both; }
+        .hero-right { background: var(--cream); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 8rem 5rem 5rem; gap: 2rem; }
+        .hero-images { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; max-width: 420px; }
+        .hero-img { border-radius: 0; overflow: hidden; animation: fadeUp 0.8s ease both; }
         .hero-img:nth-child(1) { animation-delay: 0.2s; }
         .hero-img:nth-child(2) { animation-delay: 0.35s; margin-top: 2.5rem; }
         .hero-img:nth-child(3) { animation-delay: 0.5s; margin-top: -2.5rem; }
         .hero-img:nth-child(4) { animation-delay: 0.65s; }
-
-        .hero-img img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.6s ease;
-        }
-
+        .hero-img img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform 0.6s ease; }
         .hero-img:hover img { transform: scale(1.05); }
-
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-            width: 100%;
-            max-width: 420px;
-        }
-
+        .hero-stats { display: flex; gap: 3rem; width: 100%; max-width: 420px; }
         .stat { text-align: center; }
+        .stat-num { font-family: var(--font-display); font-size: 2.5rem; font-weight: 300; color: var(--terracotta); line-height: 1; }
+        .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--charcoal); opacity: 0.6; margin-top: 0.3rem; }
 
-        .stat-num {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
-            font-weight: 300;
-            color: var(--terracotta);
-            line-height: 1;
-        }
+        /* ── BUTTONS ── */
+        .btn-primary { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.9rem 2rem; background: var(--terracotta); color: white; text-decoration: none; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.3s; animation: fadeUp 0.8s 0.45s ease both; }
+        .btn-primary:hover { background: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(196,99,58,0.3); }
+        .btn-primary svg { transition: transform 0.3s; }
+        .btn-primary:hover svg { transform: translateX(4px); }
+        .btn-outline { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.9rem 2rem; background: transparent; color: var(--charcoal); text-decoration: none; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--charcoal); cursor: pointer; transition: all 0.3s; }
+        .btn-outline:hover { background: var(--charcoal); color: var(--cream); }
+        .btn-white { background: white; color: var(--terracotta); border: none; padding: 0.9rem 2rem; font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-white:hover { background: var(--deep-brown); color: white; }
 
-        .stat-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--charcoal);
-            opacity: 0.6;
-            margin-top: 0.3rem;
-        }
-
-        /* ─── SECTION BASE ─── */
+        /* ── SECTION BASE ── */
         .section { padding: 7rem 4rem; }
-        .section-sm { padding: 5rem 4rem; }
-
-        .section-tag {
-            display: inline-block;
-            font-size: 0.68rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--terracotta);
-            margin-bottom: 1rem;
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .section-tag::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 50%;
-            width: 1.3rem; height: 1px;
-            background: var(--terracotta);
-        }
-
-        .section-title {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 4vw, 3.2rem);
-            font-weight: 300;
-            line-height: 1.2;
-            color: var(--deep-brown);
-            margin-bottom: 1.5rem;
-        }
-
+        .section-tag { display: inline-block; font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: var(--terracotta); margin-bottom: 1rem; position: relative; padding-left: 2rem; }
+        .section-tag::before { content: ''; position: absolute; left: 0; top: 50%; width: 1.3rem; height: 1px; background: var(--terracotta); }
+        .section-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.2; color: var(--deep-brown); margin-bottom: 1.5rem; }
         .section-title em { font-style: italic; color: var(--terracotta); }
+        .section-body { font-size: 1rem; line-height: 1.9; color: rgba(28,28,26,0.65); max-width: 560px; }
 
-        .section-body {
-            font-size: 1rem;
-            line-height: 1.9;
-            color: rgba(28,28,26,0.65);
-            max-width: 560px;
-        }
-
-        /* ─── SOBRE ─── */
-        .sobre {
-            background: var(--warm-white);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5rem;
-            align-items: center;
-        }
-
-        .sobre-image-wrap {
-            position: relative;
-        }
-
-        .sobre-image-wrap img {
-            width: 100%;
-            height: 600px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .sobre-accent {
-            position: absolute;
-            bottom: -2rem; right: -2rem;
-            width: 180px; height: 180px;
-            background: var(--light-sage);
-            z-index: -1;
-        }
-
-        .sobre-badge {
-            position: absolute;
-            top: 2rem; right: -1.5rem;
-            background: var(--deep-brown);
-            color: var(--cream);
-            padding: 1.5rem;
-            width: 130px; height: 130px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .sobre-badge strong {
-            font-family: var(--font-display);
-            font-size: 2.2rem;
-            font-weight: 300;
-            color: var(--gold);
-            line-height: 1;
-        }
-
-        .sobre-badge span {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            opacity: 0.7;
-            margin-top: 0.3rem;
-        }
-
-        .valores-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .valor-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.8rem;
-            padding: 1rem;
-            border-left: 2px solid var(--light-sage);
-        }
-
-        .valor-icon {
-            width: 32px; height: 32px;
-            background: var(--light-sage);
-            color: var(--sage);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            font-size: 1rem;
-        }
-
-        .valor-item h4 {
-            font-size: 0.82rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.3rem;
-        }
-
+        /* ── SOBRE ── */
+        .sobre { background: var(--warm-white); display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+        .sobre-image-wrap { position: relative; }
+        .sobre-image-wrap img { width: 100%; height: 600px; object-fit: cover; display: block; }
+        .sobre-accent { position: absolute; bottom: -2rem; right: -2rem; width: 180px; height: 180px; background: var(--light-sage); z-index: -1; }
+        .sobre-badge { position: absolute; top: 2rem; right: -1.5rem; background: var(--deep-brown); color: var(--cream); padding: 1.5rem; width: 130px; height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .sobre-badge strong { font-family: var(--font-display); font-size: 2.2rem; font-weight: 300; color: var(--gold); line-height: 1; }
+        .sobre-badge span { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-top: 0.3rem; }
+        .valores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+        .valor-item { display: flex; align-items: flex-start; gap: 0.8rem; padding: 1rem; border-left: 2px solid var(--light-sage); }
+        .valor-icon { width: 32px; height: 32px; background: var(--light-sage); color: var(--sage); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+        .valor-item h4 { font-size: 0.82rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
         .valor-item p { font-size: 0.8rem; color: rgba(28,28,26,0.55); line-height: 1.6; }
 
-        /* ─── SERVIÇOS ─── */
-        .servicos {
-            background: var(--deep-brown);
-            padding: 7rem 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .servicos::before {
-            content: 'SERVIÇOS';
-            position: absolute;
-            right: -3rem; top: 50%;
-            transform: translateY(-50%) rotate(90deg);
-            font-family: var(--font-display);
-            font-size: 8rem;
-            font-weight: 300;
-            color: rgba(255,255,255,0.03);
-            letter-spacing: 0.2em;
-            white-space: nowrap;
-            pointer-events: none;
-        }
-
+        /* ── SERVIÇOS ── */
+        .servicos { background: var(--deep-brown); padding: 7rem 4rem; position: relative; overflow: hidden; }
+        .servicos::before { content: 'SERVIÇOS'; position: absolute; right: -3rem; top: 50%; transform: translateY(-50%) rotate(90deg); font-family: var(--font-display); font-size: 8rem; font-weight: 300; color: rgba(255,255,255,0.03); letter-spacing: 0.2em; white-space: nowrap; pointer-events: none; }
         .servicos .section-title { color: var(--cream); }
         .servicos .section-body { color: rgba(247,243,238,0.5); }
-
-        .servicos-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 4rem;
-        }
-
-        .servicos-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5px;
-            background: rgba(255,255,255,0.08);
-        }
-
-        .servico-card {
-            background: var(--deep-brown);
-            padding: 3rem 2.5rem;
-            position: relative;
-            transition: all 0.4s;
-            cursor: default;
-            overflow: hidden;
-        }
-
-        .servico-card::before {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 100%; height: 3px;
-            background: linear-gradient(90deg, var(--terracotta), var(--gold));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
-
+        .servicos-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
+        .servicos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: rgba(255,255,255,0.08); }
+        .servico-card { background: var(--deep-brown); padding: 3rem 2.5rem; position: relative; transition: all 0.4s; cursor: pointer; overflow: hidden; }
+        .servico-card::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--terracotta), var(--gold)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
         .servico-card:hover::before { transform: scaleX(1); }
+        .servico-card:hover { background: rgba(255,255,255,0.04); }
+        .servico-num { font-family: var(--font-display); font-size: 4rem; font-weight: 300; color: rgba(247,243,238,0.08); line-height: 1; margin-bottom: 1.5rem; }
+        .servico-icon { font-size: 1.8rem; margin-bottom: 1.2rem; }
+        .servico-card h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; color: var(--cream); margin-bottom: 0.8rem; }
+        .servico-card p { font-size: 0.88rem; line-height: 1.8; color: rgba(247,243,238,0.5); }
+        .servico-btn { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); padding: 0.4rem 1rem; border: 1px solid rgba(184,150,90,0.35); background: transparent; cursor: pointer; font-family: var(--font-body); transition: all 0.3s; }
+        .servico-btn:hover { background: var(--terracotta); color: white; border-color: var(--terracotta); }
+        .servico-btn svg { transition: transform 0.3s; }
+        .servico-btn:hover svg { transform: translateX(3px); }
 
-        .servico-card:hover {
-            background: rgba(255,255,255,0.04);
-        }
+        /* ── MODAL SERVIÇO ── */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(28,28,26,0.75); z-index: 2000; align-items: center; justify-content: center; padding: 2rem; backdrop-filter: blur(4px); }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: var(--warm-white); max-width: 720px; width: 100%; max-height: 88vh; overflow-y: auto; position: relative; animation: modalIn 0.35s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(30px) scale(0.97); } to { opacity: 1; transform: none; } }
+        .modal-header { background: var(--deep-brown); padding: 3rem; position: relative; }
+        .modal-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .modal-title { font-family: var(--font-display); font-size: 2rem; font-weight: 300; color: var(--cream); }
+        .modal-title em { color: var(--gold); font-style: italic; }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(255,255,255,0.1); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+        .modal-close:hover { background: var(--terracotta); }
+        .modal-body { padding: 3rem; }
+        .modal-body h4 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; color: var(--deep-brown); margin: 1.5rem 0 0.5rem; }
+        .modal-body h4:first-child { margin-top: 0; }
+        .modal-body p { font-size: 0.95rem; line-height: 1.9; color: rgba(28,28,26,0.7); margin-bottom: 0.8rem; }
+        .modal-body ul { list-style: none; margin: 0.5rem 0 1rem; }
+        .modal-body ul li { font-size: 0.9rem; line-height: 1.8; color: rgba(28,28,26,0.7); padding-left: 1.4rem; position: relative; }
+        .modal-body ul li::before { content: '✦'; position: absolute; left: 0; color: var(--terracotta); font-size: 0.6rem; top: 0.35rem; }
+        .modal-cta { margin-top: 2rem; display: flex; gap: 1rem; }
 
-        .servico-num {
-            font-family: var(--font-display);
-            font-size: 4rem;
-            font-weight: 300;
-            color: rgba(247,243,238,0.08);
-            line-height: 1;
-            margin-bottom: 1.5rem;
-        }
-
-        .servico-icon {
-            font-size: 1.8rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .servico-card h3 {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--cream);
-            margin-bottom: 0.8rem;
-        }
-
-        .servico-card p {
-            font-size: 0.88rem;
-            line-height: 1.8;
-            color: rgba(247,243,238,0.5);
-        }
-
-        .servico-tag {
-            display: inline-block;
-            margin-top: 1.5rem;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--gold);
-            padding: 0.3rem 0.8rem;
-            border: 1px solid rgba(184,150,90,0.3);
-        }
-
-        /* ─── CONSULTORES ─── */
+        /* ── CONSULTORES ── */
         .consultores { background: var(--cream); }
-
-        .consultores-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .consultores-header .section-body { margin: 0 auto; text-align: left; max-width: 500px; }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-        }
-
-        .team-card {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .team-photo {
-            width: 100%;
-            height: 320px;
-            object-fit: cover;
-            display: block;
-            filter: grayscale(20%);
-            transition: all 0.5s;
-        }
-
-        .team-card:hover .team-photo {
-            filter: grayscale(0%);
-            transform: scale(1.03);
-        }
-
-        .team-overlay {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: linear-gradient(transparent, rgba(28,28,26,0.88));
-            padding: 2rem 1.2rem 1.2rem;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: all 0.4s;
-        }
-
-        .team-card:hover .team-overlay {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .team-social {
-            display: flex; gap: 0.5rem; margin-bottom: 0.5rem;
-        }
-
-        .team-social a {
-            width: 28px; height: 28px;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: white;
-            text-decoration: none;
-            font-size: 0.65rem;
-            transition: all 0.3s;
-        }
-
+        .consultores-header { text-align: center; margin-bottom: 4rem; }
+        .consultores-header .section-body { margin: 0 auto; text-align: center; }
+        /* single card centered */
+        .team-single { display: flex; justify-content: center; }
+        .team-card { position: relative; overflow: hidden; width: 320px; }
+        .team-photo { width: 100%; height: 420px; object-fit: cover; object-position: top; display: block; filter: grayscale(15%); transition: all 0.5s; }
+        .team-card:hover .team-photo { filter: grayscale(0%); transform: scale(1.03); }
+        .team-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(28,28,26,0.88)); padding: 2rem 1.2rem 1.2rem; transform: translateY(20px); opacity: 0; transition: all 0.4s; }
+        .team-card:hover .team-overlay { transform: translateY(0); opacity: 1; }
+        .team-social { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .team-social a { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; font-size: 0.7rem; transition: all 0.3s; }
         .team-social a:hover { background: var(--terracotta); border-color: var(--terracotta); }
+        .team-info { padding: 1.2rem 0; text-align: center; }
+        .team-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 400; color: var(--deep-brown); margin-bottom: 0.3rem; }
+        .team-role { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--terracotta); }
+        .team-overlay .team-name { color: white; font-size: 1.1rem; }
+        .photo-placeholder { width: 100%; height: 420px; background: linear-gradient(160deg, var(--light-sage) 0%, var(--sage) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: 0.8rem; text-align: center; padding: 2rem; gap: 1rem; }
+        .photo-placeholder svg { opacity: 0.6; }
+        .photo-placeholder p { opacity: 0.75; font-size: 0.75rem; line-height: 1.6; }
 
-        .team-info { padding: 1rem 0; }
-
-        .team-name {
-            font-family: var(--font-display);
-            font-size: 1.2rem;
-            font-weight: 400;
-            color: var(--deep-brown);
-            margin-bottom: 0.2rem;
-        }
-
-        .team-role {
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--terracotta);
-        }
-
-        .team-overlay .team-name { color: white; }
-
-        /* ─── DEPOIMENTOS ─── */
-        .depoimentos {
-            background: var(--light-sage);
-            padding: 7rem 4rem;
-            position: relative;
-        }
-
-        .depoimentos-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .depoimentos-header {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 5rem;
-            margin-bottom: 4rem;
-            align-items: center;
-        }
-
-        .depo-quote-mark {
-            font-family: var(--font-display);
-            font-size: 10rem;
-            font-weight: 300;
-            color: var(--sage);
-            opacity: 0.3;
-            line-height: 1;
-        }
-
-        .depo-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .depo-card {
-            background: var(--warm-white);
-            padding: 2.5rem;
-            position: relative;
-            transition: transform 0.4s;
-        }
-
+        /* ── DEPOIMENTOS ── */
+        .depoimentos { background: var(--light-sage); padding: 7rem 4rem; }
+        .depoimentos-inner { max-width: 1100px; margin: 0 auto; }
+        .depoimentos-header { display: grid; grid-template-columns: 1fr 2fr; gap: 5rem; margin-bottom: 4rem; align-items: center; }
+        .depo-quote-mark { font-family: var(--font-display); font-size: 10rem; font-weight: 300; color: var(--sage); opacity: 0.3; line-height: 1; }
+        .depo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .depo-card { background: var(--warm-white); padding: 2.5rem; transition: transform 0.4s; }
         .depo-card:hover { transform: translateY(-6px); }
+        .depo-stars { display: flex; gap: 3px; margin-bottom: 1.2rem; color: var(--gold); font-size: 0.8rem; }
+        .depo-text { font-family: var(--font-display); font-size: 1.05rem; font-style: italic; line-height: 1.7; color: var(--deep-brown); margin-bottom: 1.5rem; }
+        .depo-author { display: flex; align-items: center; gap: 0.8rem; }
+        .depo-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
+        .depo-name { font-size: 0.85rem; font-weight: 500; color: var(--charcoal); }
+        .depo-empresa { font-size: 0.7rem; color: var(--sage); text-transform: uppercase; letter-spacing: 0.1em; }
 
-        .depo-stars {
-            display: flex; gap: 3px; margin-bottom: 1.2rem;
-            color: var(--gold); font-size: 0.8rem;
-        }
-
-        .depo-text {
-            font-family: var(--font-display);
-            font-size: 1.05rem;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--deep-brown);
-            margin-bottom: 1.5rem;
-        }
-
-        .depo-author {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .depo-avatar {
-            width: 42px; height: 42px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border);
-        }
-
-        .depo-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--charcoal);
-        }
-
-        .depo-empresa {
-            font-size: 0.7rem;
-            color: var(--sage);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* ─── CONTATO / FOOTER SPLIT ─── */
-        .contato-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .contato-left {
-            background: var(--charcoal);
-            padding: 6rem 5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .contato-right {
-            background: var(--terracotta);
-            padding: 6rem 5rem;
-        }
-
+        /* ── CONTATO ── */
+        .contato-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
+        .contato-left { background: var(--charcoal); padding: 6rem 5rem; display: flex; flex-direction: column; justify-content: space-between; }
+        .contato-right { background: var(--terracotta); padding: 6rem 5rem; }
         .contato-left .section-title { color: var(--cream); font-size: 2.4rem; }
-
-        .contact-links {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .contact-link {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: rgba(247,243,238,0.7);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
+        .contact-links { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; }
+        .contact-link { display: flex; align-items: center; gap: 1rem; color: rgba(247,243,238,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
         .contact-link:hover { color: var(--gold); }
-
-        .contact-link-icon {
-            width: 40px; height: 40px;
-            border: 1px solid rgba(255,255,255,0.15);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            font-size: 1rem;
-        }
-
-        .social-footer {
-            display: flex;
-            gap: 1rem;
-            margin-top: 3rem;
-        }
-
-        .social-footer a {
-            width: 40px; height: 40px;
-            border: 1px solid rgba(255,255,255,0.2);
-            display: flex; align-items: center; justify-content: center;
-            color: rgba(247,243,238,0.6);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-        }
-
-        .social-footer a:hover {
-            background: var(--terracotta);
-            border-color: var(--terracotta);
-            color: white;
-        }
-
+        .contact-link-icon { width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+        .social-footer { display: flex; gap: 1rem; margin-top: 3rem; }
+        .social-footer a { width: 42px; height: 42px; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: rgba(247,243,238,0.6); text-decoration: none; font-size: 0.85rem; transition: all 0.3s; }
+        .social-footer a:hover { border-color: var(--terracotta); color: white; }
+        .social-footer a.whatsapp-btn { background: #25D366; border-color: #25D366; color: white; }
+        .social-footer a.whatsapp-btn:hover { background: #1da851; border-color: #1da851; }
         .form-group { margin-bottom: 1.5rem; }
-
-        .form-group label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 0.5rem;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 0.85rem 1rem;
-            font-family: var(--font-body);
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus { border-color: rgba(255,255,255,0.6); }
-
+        .form-group label { display: block; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.85rem 1rem; font-family: var(--font-body); font-size: 0.9rem; outline: none; transition: border-color 0.3s; }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: rgba(255,255,255,0.6); }
         .form-group select option { background: var(--terracotta); color: white; }
-
         .form-group textarea { height: 120px; resize: none; }
-
-        .btn-white {
-            background: white;
-            color: var(--terracotta);
-            border: none;
-            padding: 0.9rem 2rem;
-            font-family: var(--font-body);
-            font-size: 0.78rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-white:hover {
-            background: var(--deep-brown);
-            color: white;
-        }
-
         .contato-right .section-title { color: white; margin-bottom: 2.5rem; font-size: 2rem; }
 
-        /* ─── FOOTER ─── */
-        footer {
-            background: var(--deep-brown);
-            padding: 2rem 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .footer-logo {
-            font-family: var(--font-display);
-            font-size: 1.2rem;
-            font-weight: 300;
-            color: var(--cream);
-            letter-spacing: 0.04em;
-        }
-
-        .footer-copy {
-            font-size: 0.72rem;
-            color: rgba(247,243,238,0.4);
-            text-align: center;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .footer-links a {
-            font-size: 0.72rem;
-            color: rgba(247,243,238,0.5);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover { color: var(--gold); }
-
-        /* ─── DIVIDER ─── */
-        .ornament {
-            text-align: center;
-            padding: 1rem 0;
-            color: var(--gold);
-            font-size: 1.2rem;
-            opacity: 0.5;
-            letter-spacing: 0.5rem;
-        }
-
-        /* ─── BLOG / PARCEIROS ─── */
-        .parceiros {
-            background: var(--warm-white);
-            padding: 4rem;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .parceiros-label {
-            text-align: center;
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: rgba(28,28,26,0.4);
-            margin-bottom: 2rem;
-        }
-
-        .parceiros-logos {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 4rem;
-            flex-wrap: wrap;
-        }
-
-        .parceiro-logo {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            font-weight: 300;
-            color: rgba(28,28,26,0.25);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            transition: color 0.3s;
-        }
-
+        /* ── PARCEIROS ── */
+        .parceiros { background: var(--warm-white); padding: 4rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .parceiros-label { text-align: center; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(28,28,26,0.4); margin-bottom: 2rem; }
+        .parceiros-logos { display: flex; justify-content: center; align-items: center; gap: 4rem; flex-wrap: wrap; }
+        .parceiro-logo { font-family: var(--font-display); font-size: 1.1rem; font-weight: 300; color: rgba(28,28,26,0.25); letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; cursor: default; }
         .parceiro-logo:hover { color: var(--terracotta); }
 
-        /* ─── ANIMATIONS ─── */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* ── FOOTER ── */
+        footer { background: var(--deep-brown); padding: 2rem 4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .footer-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 300; color: var(--cream); letter-spacing: 0.04em; }
+        .footer-copy { font-size: 0.72rem; color: rgba(247,243,238,0.4); text-align: center; }
+        .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+        .footer-links a { font-size: 0.72rem; color: rgba(247,243,238,0.5); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--gold); }
 
-        .fade-in {
-            opacity: 0;
-            transform: translateY(25px);
-            transition: all 0.7s ease;
-        }
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { opacity: 0; transform: translateY(25px); transition: all 0.7s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ─── MOBILE NAV ─── */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--deep-brown);
-            z-index: 999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 2.5rem;
-        }
-
-        .mobile-menu.active { display: flex; }
-
-        .mobile-menu a {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
-            font-weight: 300;
-            color: var(--cream);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .mobile-menu a:hover { color: var(--gold); }
-
-        .mobile-close {
-            position: absolute;
-            top: 1.5rem; right: 2rem;
-            background: none;
-            border: none;
-            color: var(--cream);
-            font-size: 2rem;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        /* ─── RESPONSIVE ─── */
+        /* ── RESPONSIVE ── */
         @media (max-width: 1100px) {
-            .team-grid { grid-template-columns: repeat(2, 1fr); }
             .servicos-grid { grid-template-columns: 1fr 1fr; }
             .depo-grid { grid-template-columns: 1fr 1fr; }
         }
-
         @media (max-width: 900px) {
             .hero { grid-template-columns: 1fr; }
             .hero-right { display: none; }
-            .hero-left { min-height: 100vh; padding: 8rem 3rem 5rem; }
+            .hero-left { min-height: 100vh; padding: 8rem 2.5rem 5rem; }
             .sobre { grid-template-columns: 1fr; }
             .sobre-image-wrap { display: none; }
             .contato-wrapper { grid-template-columns: 1fr; }
@@ -1020,18 +252,20 @@
             .hamburger { display: flex; }
             .section { padding: 5rem 2rem; }
             .servicos { padding: 5rem 2rem; }
+            .depoimentos { padding: 5rem 2rem; }
             .contato-left, .contato-right { padding: 4rem 2.5rem; }
-            footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
-            .footer-links { flex-wrap: wrap; justify-content: center; }
+            footer { flex-direction: column; text-align: center; padding: 2rem; }
+            .footer-links { justify-content: center; }
+            .depoimentos-header { grid-template-columns: 1fr; gap: 1rem; }
         }
-
         @media (max-width: 600px) {
             .servicos-grid { grid-template-columns: 1fr; }
             .depo-grid { grid-template-columns: 1fr; }
-            .team-grid { grid-template-columns: 1fr 1fr; }
             .hero-stats { gap: 1.5rem; }
             .parceiros-logos { gap: 2rem; }
-            .depoimentos-header { grid-template-columns: 1fr; }
+            .modal-box { max-height: 95vh; }
+            .modal-header, .modal-body { padding: 2rem; }
+            .modal-cta { flex-direction: column; }
         }
     </style>
 </head>
@@ -1042,34 +276,31 @@
     <button class="mobile-close" onclick="closeMobileMenu()">✕</button>
     <a href="#sobre" onclick="closeMobileMenu()">Sobre</a>
     <a href="#servicos" onclick="closeMobileMenu()">Serviços</a>
-    <a href="#consultores" onclick="closeMobileMenu()">Consultores</a>
+    <a href="#consultores" onclick="closeMobileMenu()">Consultora</a>
     <a href="#depoimentos" onclick="closeMobileMenu()">Depoimentos</a>
+    <a href="blog.html">Blog</a>
     <a href="#contato" onclick="closeMobileMenu()">Contato</a>
 </div>
 
 <!-- NAVBAR -->
 <header class="navbar" id="navbar">
     <a href="#" class="logo">LC <span>Gastronômica</span></a>
-
     <nav>
         <a href="#sobre">Sobre</a>
         <a href="#servicos">Serviços</a>
-        <a href="#consultores">Consultores</a>
+        <a href="#consultores">Consultora</a>
         <a href="#depoimentos">Depoimentos</a>
+        <a href="blog.html">Blog</a>
         <a href="#contato">Contato</a>
     </nav>
-
     <div class="nav-social">
-        <a href="https://www.facebook.com" target="_blank" aria-label="Facebook" title="Facebook">
+        <a href="https://www.instagram.com/lienyscarvalhomentor" target="_blank" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.facebook.com/domfingerfood" target="_blank" aria-label="Facebook">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
         </a>
-        <a href="https://www.instagram.com" target="_blank" aria-label="Instagram" title="Instagram">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-        </a>
-        <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn" title="LinkedIn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-        </a>
-        <a href="https://wa.me/5511999999999" target="_blank" aria-label="WhatsApp" title="WhatsApp">
+        <a href="https://wa.me/5521984821444" target="_blank" aria-label="WhatsApp" style="background:#25D366;border-color:#25D366;color:white;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
         </a>
         <div class="hamburger" onclick="openMobileMenu()">
@@ -1086,39 +317,22 @@
             <h1>A arte de preparar<br>o <em>extraordinário</em></h1>
             <p class="hero-desc">Transformamos espaços gastronômicos em experiências únicas e inesquecíveis. Consultoria especializada para restaurantes, eventos e negócios de alimentação.</p>
             <a href="#contato" class="btn-primary">
-                Fale Conosco
+                Fale Comigo
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
         </div>
     </div>
     <div class="hero-right">
         <div class="hero-images">
-            <div class="hero-img">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Gastronomia fina">
-            </div>
-            <div class="hero-img">
-                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" alt="Culinária">
-            </div>
-            <div class="hero-img">
-                <img src="https://images.unsplash.com/photo-1488992783499-418eb1f62d08?w=400&q=80" alt="Alta gastronomia">
-            </div>
-            <div class="hero-img">
-                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80" alt="Restaurante">
-            </div>
+            <div class="hero-img"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Gastronomia fina"></div>
+            <div class="hero-img"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" alt="Culinária"></div>
+            <div class="hero-img"><img src="https://images.unsplash.com/photo-1488992783499-418eb1f62d08?w=400&q=80" alt="Alta gastronomia"></div>
+            <div class="hero-img"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80" alt="Restaurante"></div>
         </div>
         <div class="hero-stats">
-            <div class="stat">
-                <div class="stat-num">15+</div>
-                <div class="stat-label">Anos de Experiência</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num">340</div>
-                <div class="stat-label">Projetos Entregues</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num">98%</div>
-                <div class="stat-label">Satisfação</div>
-            </div>
+            <div class="stat"><div class="stat-num">15+</div><div class="stat-label">Anos de Experiência</div></div>
+            <div class="stat"><div class="stat-num">340</div><div class="stat-label">Projetos Entregues</div></div>
+            <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Satisfação</div></div>
         </div>
     </div>
 </section>
@@ -1138,55 +352,24 @@
 <!-- SOBRE -->
 <section id="sobre" class="section sobre">
     <div class="sobre-image-wrap">
-        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=700&q=80" alt="Nossa equipe de consultores">
+        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=700&q=80" alt="Lienys Carvalho – Chef Consultora">
         <div class="sobre-accent"></div>
-        <div class="sobre-badge">
-            <strong>15+</strong>
-            <span>Anos no mercado</span>
-        </div>
+        <div class="sobre-badge"><strong>15+</strong><span>Anos no mercado</span></div>
     </div>
     <div class="sobre-content fade-in">
-        <span class="section-tag">Sobre Nós</span>
+        <span class="section-tag">Sobre Mim</span>
         <h2 class="section-title">Uma referência em <em>consultoria gastronômica</em></h2>
-        <p class="section-body">
-            A LC – Consultoria e Crítica Gastronômica nasceu da paixão pela gastronomia e do desejo de transformar o mercado alimentício brasileiro. Com mais de quinze anos de atuação, construímos uma trajetória sólida ao lado de chefs, empresários e empreendedores que acreditam no poder da boa comida.
-        </p>
-        <p class="section-body" style="margin-top: 1rem;">
-            Nossa equipe multidisciplinar une expertise em culinária, gestão de negócios, design de ambientes e marketing para oferecer uma consultoria completa, do conceito à execução.
-        </p>
+        <p class="section-body">A LC – Consultoria e Crítica Gastronômica nasceu da paixão pela gastronomia e do desejo de transformar o mercado alimentício brasileiro. Com mais de quinze anos de atuação, construí uma trajetória sólida ao lado de chefs, empresários e empreendedores que acreditam no poder da boa comida.</p>
+        <p class="section-body" style="margin-top: 1rem;">Minha atuação une expertise em culinária, gestão de negócios e crítica gastronômica para oferecer uma consultoria completa, do conceito à execução, com atendimento em todo o Brasil.</p>
         <div class="valores-grid">
-            <div class="valor-item">
-                <div class="valor-icon">🌿</div>
-                <div>
-                    <h4>Sustentabilidade</h4>
-                    <p>Ingredientes locais e práticas conscientes em cada projeto.</p>
-                </div>
-            </div>
-            <div class="valor-item">
-                <div class="valor-icon">✦</div>
-                <div>
-                    <h4>Excelência</h4>
-                    <p>Padrão premium em cada detalhe, sem exceções.</p>
-                </div>
-            </div>
-            <div class="valor-item">
-                <div class="valor-icon">🤝</div>
-                <div>
-                    <h4>Parceria</h4>
-                    <p>Trabalhamos lado a lado com nossos clientes.</p>
-                </div>
-            </div>
-            <div class="valor-item">
-                <div class="valor-icon">💡</div>
-                <div>
-                    <h4>Inovação</h4>
-                    <p>Sempre atentos às tendências e novidades do setor.</p>
-                </div>
-            </div>
+            <div class="valor-item"><div class="valor-icon">🌿</div><div><h4>Sustentabilidade</h4><p>Ingredientes locais e práticas conscientes em cada projeto.</p></div></div>
+            <div class="valor-item"><div class="valor-icon">✦</div><div><h4>Excelência</h4><p>Padrão premium em cada detalhe, sem exceções.</p></div></div>
+            <div class="valor-item"><div class="valor-icon">🤝</div><div><h4>Parceria</h4><p>Trabalho lado a lado com meus clientes.</p></div></div>
+            <div class="valor-item"><div class="valor-icon">💡</div><div><h4>Inovação</h4><p>Sempre atenta às tendências e novidades do setor.</p></div></div>
         </div>
         <div style="margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-            <a href="#servicos" class="btn-primary" style="animation: none;">Nossos Serviços</a>
-            <a href="#consultores" class="btn-outline">Conhecer a Equipe</a>
+            <a href="#servicos" class="btn-primary" style="animation: none;">Meus Serviços</a>
+            <a href="#consultores" class="btn-outline">Conheça a Consultora</a>
         </div>
     </div>
 </section>
@@ -1195,116 +378,290 @@
 <section id="servicos" class="servicos">
     <div class="servicos-header">
         <div>
-            <span class="section-tag" style="color: var(--gold);">O que oferecemos</span>
-            <h2 class="section-title">Nossos <em>Serviços</em></h2>
+            <span class="section-tag" style="color: var(--gold);">O que ofereço</span>
+            <h2 class="section-title">Meus <em>Serviços</em></h2>
         </div>
-        <p class="section-body">Soluções completas para o seu negócio gastronômico, da ideação à operação.</p>
+        <p class="section-body">Clique em qualquer serviço para ver o detalhamento completo.</p>
     </div>
     <div class="servicos-grid">
-        <div class="servico-card fade-in">
+        <div class="servico-card fade-in" onclick="openModal('cardapio')">
             <div class="servico-num">01</div>
             <div class="servico-icon">👨‍🍳</div>
             <h3>Consultoria de Cardápio</h3>
-            <p>Desenvolvimento e revisão de menus com foco em identidade, rentabilidade e experiência do cliente. Do conceito à ficha técnica.</p>
-            <span class="servico-tag">Gastronomia</span>
+            <p>Desenvolvimento e revisão de menus com foco em identidade, rentabilidade e experiência do cliente.</p>
+            <button class="servico-btn">Ver detalhes <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
         </div>
-        <div class="servico-card fade-in">
+        <div class="servico-card fade-in" onclick="openModal('abertura')">
             <div class="servico-num">02</div>
             <div class="servico-icon">🏪</div>
             <h3>Abertura de Restaurantes</h3>
-            <p>Acompanhamento completo na abertura do seu negócio: projeto, equipe, licenças, fornecedores e operação. Do zero ao funcionamento pleno.</p>
-            <span class="servico-tag">Gestão</span>
+            <p>Acompanhamento completo na abertura do seu negócio: projeto, equipe, licenças e operação.</p>
+            <button class="servico-btn">Ver detalhes <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
         </div>
-        <div class="servico-card fade-in">
+        <div class="servico-card fade-in" onclick="openModal('gestao')">
             <div class="servico-num">03</div>
             <div class="servico-icon">📊</div>
             <h3>Gestão & Operações</h3>
-            <p>Melhoria de processos, controle de custos, treinamento de equipes e indicadores de desempenho para maximizar seus resultados.</p>
-            <span class="servico-tag">Negócios</span>
+            <p>Melhoria de processos, controle de custos e indicadores de desempenho para maximizar resultados.</p>
+            <button class="servico-btn">Ver detalhes <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
         </div>
-        <div class="servico-card fade-in">
+        <div class="servico-card fade-in" onclick="openModal('eventos')">
             <div class="servico-num">04</div>
             <div class="servico-icon">🎉</div>
             <h3>Eventos Gastronômicos</h3>
-            <p>Planejamento e execução de eventos corporativos, festivais, pop-ups e experiências gastronômicas personalizadas e memoráveis.</p>
-            <span class="servico-tag">Eventos</span>
+            <p>Planejamento e execução de eventos corporativos, festivais, pop-ups e experiências memoráveis.</p>
+            <button class="servico-btn">Ver detalhes <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
         </div>
-        <div class="servico-card fade-in">
+        <div class="servico-card fade-in" onclick="openModal('marketing')">
             <div class="servico-num">05</div>
             <div class="servico-icon">📱</div>
             <h3>Marketing & Branding</h3>
-            <p>Posicionamento de marca, estratégias digitais, fotografia gastronômica e criação de conteúdo para redes sociais especializadas.</p>
-            <span class="servico-tag">Marketing</span>
+            <p>Posicionamento de marca, estratégias digitais e criação de conteúdo para redes sociais.</p>
+            <button class="servico-btn">Ver detalhes <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
         </div>
-        <div class="servico-card fade-in">
+        <div class="servico-card fade-in" onclick="openModal('treinamento')">
             <div class="servico-num">06</div>
             <div class="servico-icon">🎓</div>
             <h3>Treinamento de Equipes</h3>
-            <p>Capacitação em serviço, gastronomia, atendimento ao cliente, sommelier e gestão para elevar o padrão de toda a sua equipe.</p>
-            <span class="servico-tag">Educação</span>
+            <p>Capacitação em serviço, gastronomia e atendimento para elevar o padrão da sua equipe.</p>
+            <button class="servico-btn">Ver detalhes <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
         </div>
     </div>
 </section>
 
-<!-- CONSULTORES -->
+<!-- MODAIS DE SERVIÇO -->
+<div class="modal-overlay" id="modal-cardapio" onclick="closeModalOutside(event, 'cardapio')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-icon">👨‍🍳</div>
+      <h2 class="modal-title">Consultoria de <em>Cardápio</em></h2>
+      <button class="modal-close" onclick="closeModal('cardapio')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4>O que é este serviço?</h4>
+      <p>A consultoria de cardápio é o coração de qualquer negócio gastronômico. Um menu bem estruturado conta uma história, reflete a identidade do estabelecimento e equilibra criatividade com rentabilidade. Atuo em todas as etapas, desde o conceito inicial até a ficha técnica de cada preparação.</p>
+      <h4>O que está incluído</h4>
+      <ul>
+        <li>Diagnóstico completo do cardápio atual (se existente)</li>
+        <li>Definição de identidade gastronômica e público-alvo</li>
+        <li>Criação e desenvolvimento de receitas autorais</li>
+        <li>Elaboração de fichas técnicas com custo de produção</li>
+        <li>Engenharia de cardápio para maximizar rentabilidade</li>
+        <li>Orientação sobre precificação e markup ideal</li>
+        <li>Harmonização de bebidas e sugestão de carta de vinhos</li>
+        <li>Treinamento da equipe de cozinha nas novas preparações</li>
+        <li>Revisão sazonal e atualização do menu</li>
+      </ul>
+      <h4>Para quem é indicado?</h4>
+      <p>Restaurantes em fase de abertura, estabelecimentos que desejam reposicionar sua proposta gastronômica, chefs que precisam estruturar suas receitas de forma profissional e negócios que enfrentam dificuldades de rentabilidade no setor de alimentos.</p>
+      <h4>Formato de atendimento</h4>
+      <p>Presencial (Rio de Janeiro/RJ) ou Online para todo o Brasil. A metodologia inclui visitas técnicas, degustações, reuniões de alinhamento e entrega de material completo em formato digital.</p>
+      <div class="modal-cta">
+        <a href="https://wa.me/5521984821444?text=Olá Lienys! Tenho interesse na Consultoria de Cardápio." target="_blank" class="btn-primary" style="animation:none;">Solicitar via WhatsApp</a>
+        <a href="#contato" class="btn-outline" onclick="closeModal('cardapio')">Enviar mensagem</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-abertura" onclick="closeModalOutside(event, 'abertura')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-icon">🏪</div>
+      <h2 class="modal-title">Abertura de <em>Restaurantes</em></h2>
+      <button class="modal-close" onclick="closeModal('abertura')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4>Do sonho à realidade</h4>
+      <p>Abrir um restaurante é um dos projetos mais desafiadores e gratificantes que existem. Com minha consultoria, você terá ao seu lado uma profissional com experiência real em abertura de estabelecimentos, minimizando riscos e acelerando o caminho para o sucesso.</p>
+      <h4>Etapas contempladas</h4>
+      <ul>
+        <li>Estudo de viabilidade e análise de mercado local</li>
+        <li>Desenvolvimento do conceito e identidade do negócio</li>
+        <li>Apoio na escolha e adequação do ponto comercial</li>
+        <li>Orientação sobre licenças e regularizações sanitárias</li>
+        <li>Seleção e negociação com fornecedores estratégicos</li>
+        <li>Montagem e treinamento da equipe (cozinha e salão)</li>
+        <li>Definição de processos operacionais padrão (POPs)</li>
+        <li>Pré-abertura com simulações e testes operacionais</li>
+        <li>Acompanhamento nos primeiros meses de funcionamento</li>
+      </ul>
+      <h4>Cronograma e investimento</h4>
+      <p>O processo médio de consultoria para abertura dura entre 3 e 6 meses, dependendo da complexidade do projeto. O investimento é personalizado de acordo com o porte e conceito do estabelecimento.</p>
+      <div class="modal-cta">
+        <a href="https://wa.me/5521984821444?text=Olá Lienys! Quero abrir um restaurante e preciso de consultoria." target="_blank" class="btn-primary" style="animation:none;">Falar pelo WhatsApp</a>
+        <a href="#contato" class="btn-outline" onclick="closeModal('abertura')">Enviar mensagem</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-gestao" onclick="closeModalOutside(event, 'gestao')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-icon">📊</div>
+      <h2 class="modal-title">Gestão & <em>Operações</em></h2>
+      <button class="modal-close" onclick="closeModal('gestao')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4>Transformando operação em resultado</h4>
+      <p>Muitos restaurantes com excelente comida fecham as portas por falhas na gestão. Esta consultoria atua diretamente nos processos operacionais, financeiros e de pessoas para garantir a saúde e crescimento sustentável do seu negócio.</p>
+      <h4>Áreas de atuação</h4>
+      <ul>
+        <li>Diagnóstico completo de processos e gargalos operacionais</li>
+        <li>Implementação de controle de CMV (Custo de Mercadoria Vendida)</li>
+        <li>Gestão de estoque, compras e relacionamento com fornecedores</li>
+        <li>Análise e melhoria de indicadores financeiros (DRE, fluxo de caixa)</li>
+        <li>Precificação estratégica e revisão de margem de contribuição</li>
+        <li>Elaboração de POPs para cozinha, salão e atendimento</li>
+        <li>Implementação de sistema de avaliação de desempenho da equipe</li>
+        <li>Estratégias de redução de desperdício e sustentabilidade</li>
+        <li>Relatórios mensais e acompanhamento de metas</li>
+      </ul>
+      <h4>Resultados esperados</h4>
+      <p>Clientes que passaram por esta consultoria relatam redução média de 15% nos custos operacionais e aumento de 25% na eficiência dos processos nos primeiros 90 dias de implementação.</p>
+      <div class="modal-cta">
+        <a href="https://wa.me/5521984821444?text=Olá Lienys! Preciso de consultoria em Gestão e Operações." target="_blank" class="btn-primary" style="animation:none;">Falar pelo WhatsApp</a>
+        <a href="#contato" class="btn-outline" onclick="closeModal('gestao')">Enviar mensagem</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-eventos" onclick="closeModalOutside(event, 'eventos')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-icon">🎉</div>
+      <h2 class="modal-title">Eventos <em>Gastronômicos</em></h2>
+      <button class="modal-close" onclick="closeModal('eventos')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4>Experiências que ficam na memória</h4>
+      <p>Um evento gastronômico bem concebido é muito mais do que comida: é narrativa, sensação, conexão. Planejo e executo eventos que transformam a gastronomia no centro da experiência, seja para 10 ou 500 pessoas.</p>
+      <h4>Tipos de eventos</h4>
+      <ul>
+        <li>Jantares temáticos e menus degustação</li>
+        <li>Eventos corporativos e confraternizações</li>
+        <li>Pop-ups gastronômicos e experiências exclusivas</li>
+        <li>Festivais de gastronomia e food markets</li>
+        <li>Workshops culinários e aulas show</li>
+        <li>Casamentos e eventos sociais com curadoria gastronômica</li>
+        <li>Lançamentos de produtos alimentícios</li>
+      </ul>
+      <h4>O que está incluso</h4>
+      <ul>
+        <li>Conceituação e tema gastronômico do evento</li>
+        <li>Criação e execução do cardápio personalizado</li>
+        <li>Gestão de fornecedores e equipe de serviço</li>
+        <li>Curadoria de bebidas e harmonizações</li>
+        <li>Coordenação operacional no dia do evento</li>
+      </ul>
+      <div class="modal-cta">
+        <a href="https://wa.me/5521984821444?text=Olá Lienys! Quero planejar um evento gastronômico." target="_blank" class="btn-primary" style="animation:none;">Solicitar orçamento</a>
+        <a href="#contato" class="btn-outline" onclick="closeModal('eventos')">Enviar mensagem</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-marketing" onclick="closeModalOutside(event, 'marketing')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-icon">📱</div>
+      <h2 class="modal-title">Marketing & <em>Branding</em></h2>
+      <button class="modal-close" onclick="closeModal('marketing')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4>Sua marca no lugar que ela merece</h4>
+      <p>No cenário atual, a presença digital é tão importante quanto a qualidade do prato. Esta consultoria posiciona sua marca gastronômica de forma autêntica e estratégica, atraindo o público certo e construindo uma identidade memorável.</p>
+      <h4>Serviços incluídos</h4>
+      <ul>
+        <li>Diagnóstico de marca e posicionamento atual</li>
+        <li>Definição de identidade visual e tom de voz</li>
+        <li>Estratégia de conteúdo para Instagram e outras redes</li>
+        <li>Orientação para fotografia e vídeo gastronômico</li>
+        <li>Curadoria de influenciadores gastronômicos</li>
+        <li>Gestão de avaliações (Google, TripAdvisor, iFood)</li>
+        <li>Estratégias de lançamento e campanhas sazonais</li>
+        <li>Análise de métricas e relatórios de performance</li>
+        <li>Posicionamento para crítica gastronômica e imprensa</li>
+      </ul>
+      <h4>Diferenciais</h4>
+      <p>Como crítica gastronômica atuante, conheço de perto o que a mídia e o público buscam. Isso nos dá vantagem estratégica para posicionar seu negócio de forma que gere cobertura orgânica e reputação sólida.</p>
+      <div class="modal-cta">
+        <a href="https://wa.me/5521984821444?text=Olá Lienys! Quero melhorar o marketing do meu restaurante." target="_blank" class="btn-primary" style="animation:none;">Falar pelo WhatsApp</a>
+        <a href="#contato" class="btn-outline" onclick="closeModal('marketing')">Enviar mensagem</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-treinamento" onclick="closeModalOutside(event, 'treinamento')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-icon">🎓</div>
+      <h2 class="modal-title">Treinamento de <em>Equipes</em></h2>
+      <button class="modal-close" onclick="closeModal('treinamento')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4>Pessoas fazem o restaurante</h4>
+      <p>A melhor cozinha do mundo não se sustenta sem uma equipe bem treinada, motivada e alinhada com a visão do negócio. Ofereço programas de capacitação personalizados, do chão da cozinha ao atendimento no salão.</p>
+      <h4>Módulos de treinamento</h4>
+      <ul>
+        <li><strong>Cozinha:</strong> Técnicas culinárias, mise en place, boas práticas de higiene e manipulação</li>
+        <li><strong>Salão:</strong> Técnicas de serviço, etiqueta à mesa, upselling e experiência do cliente</li>
+        <li><strong>Bebidas:</strong> Introdução à sommelier, harmonizações e serviço de vinhos</li>
+        <li><strong>Gestão:</strong> Liderança para chefs, gestão de equipe e solução de conflitos</li>
+        <li><strong>Atendimento:</strong> Comunicação eficaz, gestão de reclamações e fidelização</li>
+      </ul>
+      <h4>Formatos disponíveis</h4>
+      <ul>
+        <li>Treinamentos in company (presencial na sua empresa)</li>
+        <li>Workshops intensivos de 1 a 3 dias</li>
+        <li>Programas de formação continuada mensais</li>
+        <li>Treinamentos online ao vivo ou gravados</li>
+      </ul>
+      <h4>Atendimento nacional</h4>
+      <p>Os treinamentos presenciais são realizados no Rio de Janeiro e em viagens para todo o Brasil. Os programas online atendem qualquer localidade com a mesma qualidade e interatividade.</p>
+      <div class="modal-cta">
+        <a href="https://wa.me/5521984821444?text=Olá Lienys! Tenho interesse em treinamento para minha equipe." target="_blank" class="btn-primary" style="animation:none;">Solicitar proposta</a>
+        <a href="#contato" class="btn-outline" onclick="closeModal('treinamento')">Enviar mensagem</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONSULTORA -->
 <section id="consultores" class="section consultores">
     <div class="consultores-header fade-in">
-        <span class="section-tag">Nossa Equipe</span>
-        <h2 class="section-title">Conheça nossos <em>Consultores</em></h2>
-        <p class="section-body">Profissionais apaixonados e altamente qualificados, com trajetórias reconhecidas no mercado gastronômico nacional e internacional.</p>
+        <span class="section-tag">Quem sou eu</span>
+        <h2 class="section-title">Conheça a <em>Consultora</em></h2>
+        <p class="section-body">Profissional apaixonada e altamente qualificada, com trajetória reconhecida no mercado gastronômico nacional.</p>
     </div>
-    <div class="team-grid">
+    <div class="team-single">
         <div class="team-card fade-in">
-            <img class="team-photo" src="https://images.unsplash.com/photo-1607631568010-a87245c0daf8?w=400&q=80" alt="Chef Ana Lima">
+            <!-- SUBSTITUA pelo caminho da sua foto: <img class="team-photo" src="sua-foto.jpg" alt="Lienys Carvalho"> -->
+            <div class="photo-placeholder">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <p>Adicione sua foto aqui.<br>Substitua esta div por:<br><code style="font-size:0.65rem;opacity:0.6">&lt;img class="team-photo" src="foto.jpg"&gt;</code></p>
+            </div>
             <div class="team-overlay">
                 <div class="team-social">
-                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">in</a>
-                    <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn">li</a>
+                    <a href="https://www.instagram.com/lienyscarvalhomentor" target="_blank" aria-label="Instagram">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/></svg>
+                    </a>
+                    <a href="https://www.facebook.com/domfingerfood" target="_blank" aria-label="Facebook">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                    </a>
+                    <a href="https://wa.me/5521984821444" target="_blank" aria-label="WhatsApp" style="background:#25D366;border-color:#25D366;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                    </a>
                 </div>
-                <div class="team-name" style="color:white;">Ana Lima</div>
+                <div class="team-name" style="color:white;">Lienys Carvalho</div>
             </div>
             <div class="team-info">
-                <div class="team-name">Ana Lima</div>
+                <div class="team-name">Lienys Carvalho</div>
                 <div class="team-role">Chef Consultora Sênior</div>
-            </div>
-        </div>
-        <div class="team-card fade-in">
-            <img class="team-photo" src="https://images.unsplash.com/photo-1583394293294-986bd2012df2?w=400&q=80" alt="Carlos Mendes">
-            <div class="team-overlay">
-                <div class="team-social">
-                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">in</a>
-                    <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn">li</a>
-                </div>
-            </div>
-            <div class="team-info">
-                <div class="team-name">Carlos Mendes</div>
-                <div class="team-role">Consultor de Gestão</div>
-            </div>
-        </div>
-        <div class="team-card fade-in">
-            <img class="team-photo" src="https://images.unsplash.com/photo-1595475207225-428b62bda831?w=400&q=80" alt="Fernanda Costa">
-            <div class="team-overlay">
-                <div class="team-social">
-                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">in</a>
-                    <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn">li</a>
-                </div>
-            </div>
-            <div class="team-info">
-                <div class="team-name">Fernanda Costa</div>
-                <div class="team-role">Especialista em Marketing</div>
-            </div>
-        </div>
-        <div class="team-card fade-in">
-            <img class="team-photo" src="https://images.unsplash.com/photo-1611171711912-e3f5b1c68f6b?w=400&q=80" alt="Ricardo Neves">
-            <div class="team-overlay">
-                <div class="team-social">
-                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">in</a>
-                    <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn">li</a>
-                </div>
-            </div>
-            <div class="team-info">
-                <div class="team-name">Ricardo Neves</div>
-                <div class="team-role">Sommelier & Beverage</div>
             </div>
         </div>
     </div>
@@ -1316,24 +673,15 @@
         <div class="depoimentos-header fade-in">
             <div>
                 <span class="section-tag">Depoimentos</span>
-                <h2 class="section-title">O que nossos<br><em>clientes dizem</em></h2>
+                <h2 class="section-title">O que meus<br><em>clientes dizem</em></h2>
                 <div class="depo-quote-mark">"</div>
             </div>
             <div>
-                <p class="section-body">Mais de 340 projetos realizados e clientes que transformaram seus negócios com a nossa ajuda. Veja o que eles têm a dizer sobre a experiência com a LC Gastronômica.</p>
+                <p class="section-body">Mais de 340 projetos realizados e clientes que transformaram seus negócios com a minha ajuda. Veja o que eles têm a dizer sobre a experiência com a LC Gastronômica.</p>
                 <div style="margin-top: 2rem; display: flex; gap: 3rem;">
-                    <div class="stat">
-                        <div class="stat-num" style="color: var(--dark-sage);">340+</div>
-                        <div class="stat-label">Projetos</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-num" style="color: var(--dark-sage);">98%</div>
-                        <div class="stat-label">Satisfação</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-num" style="color: var(--dark-sage);">25+</div>
-                        <div class="stat-label">Cidades</div>
-                    </div>
+                    <div class="stat"><div class="stat-num" style="color: var(--dark-sage);">340+</div><div class="stat-label">Projetos</div></div>
+                    <div class="stat"><div class="stat-num" style="color: var(--dark-sage);">98%</div><div class="stat-label">Satisfação</div></div>
+                    <div class="stat"><div class="stat-num" style="color: var(--dark-sage);">25+</div><div class="stat-label">Cidades</div></div>
                 </div>
             </div>
         </div>
@@ -1343,32 +691,23 @@
                 <p class="depo-text">"A LC Gastronômica transformou completamente o conceito do nosso restaurante. Em apenas seis meses, aumentamos o faturamento em 40% e fidelizamos nossa clientela."</p>
                 <div class="depo-author">
                     <img class="depo-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Marcelo Andrade">
-                    <div>
-                        <div class="depo-name">Marcelo Andrade</div>
-                        <div class="depo-empresa">Restaurante Canela, SP</div>
-                    </div>
+                    <div><div class="depo-name">Marcelo Andrade</div><div class="depo-empresa">Restaurante Canela, SP</div></div>
                 </div>
             </div>
             <div class="depo-card fade-in">
                 <div class="depo-stars">★★★★★</div>
-                <p class="depo-text">"Profissionalismo impecável do começo ao fim. O treinamento da equipe foi um divisor de águas no nosso atendimento. Recomendo sem hesitar a qualquer empreendedor do setor."</p>
+                <p class="depo-text">"Profissionalismo impecável do começo ao fim. O treinamento da equipe foi um divisor de águas no nosso atendimento. Recomendo sem hesitar!"</p>
                 <div class="depo-author">
                     <img class="depo-avatar" src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&q=80" alt="Patrícia Souza">
-                    <div>
-                        <div class="depo-name">Patrícia Souza</div>
-                        <div class="depo-empresa">Bistrô Caju, RJ</div>
-                    </div>
+                    <div><div class="depo-name">Patrícia Souza</div><div class="depo-empresa">Bistrô Caju, RJ</div></div>
                 </div>
             </div>
             <div class="depo-card fade-in">
                 <div class="depo-stars">★★★★★</div>
-                <p class="depo-text">"Abrir nosso primeiro restaurante parecia um sonho distante. Com a LC ao nosso lado, o processo foi seguro, organizado e muito acima das nossas expectativas."</p>
+                <p class="depo-text">"Abrir nosso primeiro restaurante parecia um sonho distante. Com a Lienys ao nosso lado, o processo foi seguro, organizado e muito acima das expectativas."</p>
                 <div class="depo-author">
                     <img class="depo-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80" alt="Rodrigo Figueiredo">
-                    <div>
-                        <div class="depo-name">Rodrigo Figueiredo</div>
-                        <div class="depo-empresa">Casa da Brasa, MG</div>
-                    </div>
+                    <div><div class="depo-name">Rodrigo Figueiredo</div><div class="depo-empresa">Casa da Brasa, MG</div></div>
                 </div>
             </div>
         </div>
@@ -1382,38 +721,37 @@
             <div>
                 <span class="section-tag" style="color: var(--gold);">Vamos conversar</span>
                 <h2 class="section-title">Entre em<br><em style="color: var(--gold);">Contato</em></h2>
-                <p style="color: rgba(247,243,238,0.55); font-size: 0.9rem; line-height: 1.8; margin-top: 1rem; max-width: 380px;">
-                    Estamos prontos para entender o seu negócio e apresentar as melhores soluções gastronômicas para o seu sucesso.
-                </p>
+                <p style="color: rgba(247,243,238,0.55); font-size: 0.9rem; line-height: 1.8; margin-top: 1rem; max-width: 380px;">Estou pronta para entender o seu negócio e apresentar as melhores soluções gastronômicas para o seu sucesso.</p>
             </div>
             <div class="contact-links">
-                <a class="contact-link" href="tel:+551133334444">
-                    <div class="contact-link-icon">📞</div>
-                    <span>(11) 3333-4444</span>
+                <a class="contact-link" href="https://wa.me/5521984821444" target="_blank">
+                    <div class="contact-link-icon">💬</div>
+                    <span>(21) 98482-1444 — WhatsApp</span>
                 </a>
-                <a class="contact-link" href="mailto:contato@miseonplace.com.br">
+                <a class="contact-link" href="mailto:contato@lcconsultoria.com.br">
                     <div class="contact-link-icon">✉️</div>
                     <span>contato@lcconsultoria.com.br</span>
                 </a>
-                <a class="contact-link" href="https://wa.me/5511999999999" target="_blank">
-                    <div class="contact-link-icon">💬</div>
-                    <span>(11) 99999-9999 — WhatsApp</span>
-                </a>
                 <div class="contact-link" style="cursor: default;">
                     <div class="contact-link-icon">📍</div>
-                    <span>Rua das Flores, 123 – Jardins, São Paulo – SP</span>
+                    <div>
+                        <div>Rio de Janeiro / RJ</div>
+                        <div style="font-size:0.8rem;margin-top:0.2rem;opacity:0.7;">🌐 Online — Atendimento em todo o Brasil</div>
+                    </div>
                 </div>
             </div>
             <div>
-                <p style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(247,243,238,0.4); margin-bottom: 0.8rem;">Siga-nos nas redes</p>
+                <p style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(247,243,238,0.4); margin-bottom: 0.8rem;">Siga-me nas redes</p>
                 <div class="social-footer">
-                    <a href="https://www.facebook.com" target="_blank" aria-label="Facebook" title="Facebook">f</a>
-                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram" title="Instagram">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/></svg>
+                    <a href="https://www.instagram.com/lienyscarvalhomentor" target="_blank" aria-label="Instagram @lienyscarvalhomentor" title="Instagram">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                     </a>
-                    <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn" title="LinkedIn">in</a>
-                    <a href="https://www.youtube.com" target="_blank" aria-label="YouTube" title="YouTube">▶</a>
-                    <a href="https://www.tiktok.com" target="_blank" aria-label="TikTok" title="TikTok">♪</a>
+                    <a href="https://www.facebook.com/domfingerfood" target="_blank" aria-label="Facebook @domfingerfood" title="Facebook">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                    </a>
+                    <a href="https://wa.me/5521984821444" target="_blank" aria-label="WhatsApp" title="WhatsApp (21) 98482-1444" class="whatsapp-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                    </a>
                 </div>
             </div>
         </div>
@@ -1421,20 +759,11 @@
             <h3 class="section-title">Solicite uma <em style="color: rgba(255,255,255,0.7);">Proposta</em></h3>
             <form onsubmit="handleForm(event)">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label>Nome *</label>
-                        <input type="text" placeholder="Seu nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label>E-mail *</label>
-                        <input type="email" placeholder="seu@email.com" required>
-                    </div>
+                    <div class="form-group"><label>Nome *</label><input type="text" placeholder="Seu nome" required></div>
+                    <div class="form-group"><label>E-mail *</label><input type="email" placeholder="seu@email.com" required></div>
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label>Telefone</label>
-                        <input type="tel" placeholder="(11) 99999-9999">
-                    </div>
+                    <div class="form-group"><label>Telefone</label><input type="tel" placeholder="(21) 99999-9999"></div>
                     <div class="form-group">
                         <label>Serviço de Interesse</label>
                         <select>
@@ -1448,17 +777,14 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Mensagem</label>
-                    <textarea placeholder="Conte-nos sobre seu projeto ou necessidade..."></textarea>
-                </div>
+                <div class="form-group"><label>Mensagem</label><textarea placeholder="Conte-me sobre seu projeto ou necessidade..."></textarea></div>
                 <button type="submit" class="btn-white">
                     Enviar Mensagem
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
                 </button>
             </form>
             <div id="formSuccess" style="display:none; margin-top: 1.5rem; background: rgba(255,255,255,0.15); padding: 1rem; color: white; font-size: 0.9rem;">
-                ✓ Mensagem enviada com sucesso! Em breve entraremos em contato.
+                ✓ Mensagem enviada com sucesso! Em breve entrarei em contato.
             </div>
         </div>
     </div>
@@ -1467,52 +793,29 @@
 <!-- FOOTER -->
 <footer>
     <div class="footer-logo">LC – Consultoria e Crítica Gastronômica</div>
-    <p class="footer-copy">© 2025 LC – Consultoria e Crítica Gastronômica. Todos os direitos reservados.</p>
+    <p class="footer-copy">© 2025 Lienys Carvalho. Todos os direitos reservados.</p>
     <div class="footer-links">
         <a href="#sobre">Sobre</a>
         <a href="#servicos">Serviços</a>
+        <a href="blog.html">Blog</a>
         <a href="#contato">Contato</a>
-        <a href="#">Política de Privacidade</a>
+        <a href="privacidade.html">Política de Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
     </div>
 </footer>
 
 <script>
-    // Navbar scroll
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-        navbar.classList.toggle('scrolled', window.scrollY > 50);
-    });
-
-    // Mobile menu
-    function openMobileMenu() {
-        document.getElementById('mobileMenu').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeMobileMenu() {
-        document.getElementById('mobileMenu').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // Intersection Observer for fade-in
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 50); });
+    function openMobileMenu() { document.getElementById('mobileMenu').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('active'); document.body.style.overflow = ''; }
+    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    // Form handler
-    function handleForm(e) {
-        e.preventDefault();
-        document.getElementById('formSuccess').style.display = 'block';
-        e.target.reset();
-        setTimeout(() => {
-            document.getElementById('formSuccess').style.display = 'none';
-        }, 5000);
-    }
+    function handleForm(e) { e.preventDefault(); document.getElementById('formSuccess').style.display = 'block'; e.target.reset(); setTimeout(() => { document.getElementById('formSuccess').style.display = 'none'; }, 5000); }
+    function openModal(id) { document.getElementById('modal-' + id).classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeModal(id) { document.getElementById('modal-' + id).classList.remove('active'); document.body.style.overflow = ''; }
+    function closeModalOutside(e, id) { if (e.target === document.getElementById('modal-' + id)) closeModal(id); }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.querySelectorAll('.modal-overlay.active').forEach(m => { m.classList.remove('active'); document.body.style.overflow = ''; }); }});
 </script>
 </body>
 </html>
