@@ -1391,9 +1391,9 @@
                     <div class="contact-link-icon">📞</div>
                     <span>(11) 3333-4444</span>
                 </a>
-                <a class="contact-link" href="/cdn-cgi/l/email-protection#afccc0c1dbcedbc0efc2c6dccac0c1dfc3ceccca81ccc0c281cddd">
+                <a class="contact-link" href="mailto:contato@miseonplace.com.br">
                     <div class="contact-link-icon">✉️</div>
-                    <span><span class="__cf_email__" data-cfemail="afccc0c1dbcedbc0efc3ccccc0c1dcdac3dbc0ddc6ce81ccc0c281cddd">[email&#160;protected]</span></span>
+                    <span>contato@lcconsultoria.com.br</span>
                 </a>
                 <a class="contact-link" href="https://wa.me/5511999999999" target="_blank">
                     <div class="contact-link-icon">💬</div>
@@ -1476,7 +1476,7 @@
     </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
     // Navbar scroll
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
@@ -1506,4 +1506,13 @@
 
     // Form handler
     function handleForm(e) {
-        e.preventDe
+        e.preventDefault();
+        document.getElementById('formSuccess').style.display = 'block';
+        e.target.reset();
+        setTimeout(() => {
+            document.getElementById('formSuccess').style.display = 'none';
+        }, 5000);
+    }
+</script>
+</body>
+</html>
