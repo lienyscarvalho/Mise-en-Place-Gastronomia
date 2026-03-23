@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog – LC Consultoria e Crítica Gastronômica</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%232C1F14'/><text x='32' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='13' fill='%23B8965A' font-weight='bold'>LC</text><line x1='14' y1='28' x2='50' y2='28' stroke='%23C4633A' stroke-width='1.5'/><text x='32' y='40' text-anchor='middle' font-family='Georgia,serif' font-size='7.5' fill='%23F7F3EE' letter-spacing='0.5'>CONSULTORIA</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root{--cream:#F7F3EE;--warm-white:#FDFAF7;--charcoal:#1C1C1A;--deep-brown:#2C1F14;--terracotta:#C4633A;--gold:#B8965A;--sage:#7A8C6E;--light-sage:#EAF0E6;--border:rgba(28,28,26,0.12);--font-display:'Cormorant Garamond',Georgia,serif;--font-body:'DM Sans',sans-serif;}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html{scroll-behavior:smooth;}
+        body{background:var(--cream);color:var(--charcoal);font-family:var(--font-body);font-weight:300;overflow-x:hidden;}
+        ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--cream);}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
+        .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 4rem;background:rgba(247,243,238,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:all .4s;}
+        .navbar.scrolled{padding:.9rem 4rem;box-shadow:0 4px 30px rgba(28,28,26,.06);}
+        .logo{font-family:var(--font-display);font-size:1.45rem;font-weight:600;letter-spacing:.02em;color:var(--deep-brown);text-decoration:none;}
+        .logo span{color:var(--terracotta);font-style:italic;}
+        nav{display:flex;gap:2rem;align-items:center;}
+        nav a{font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--charcoal);text-decoration:none;position:relative;transition:color .3s;}
+        nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--terracotta);transition:width .35s;}
+        nav a:hover,nav a.active{color:var(--terracotta);}
+        nav a:hover::after,nav a.active::after{width:100%;}
+        .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+        .hamburger span{display:block;width:24px;height:2px;background:var(--charcoal);}
+        .mobile-menu{display:none;position:fixed;inset:0;background:var(--deep-brown);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;}
+        .mobile-menu.active{display:flex;}
+        .mobile-menu a{font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--cream);text-decoration:none;}
+        .mobile-menu a:hover{color:var(--gold);}
+        .mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--cream);font-size:2rem;cursor:pointer;}
+
+        .blog-hero{padding:9rem 4rem 5rem;background:var(--deep-brown);position:relative;overflow:hidden;}
+        .blog-hero::before{content:'BLOG';position:absolute;right:-2rem;top:50%;transform:translateY(-50%) rotate(90deg);font-family:var(--font-display);font-size:12rem;color:rgba(255,255,255,.03);letter-spacing:.2em;pointer-events:none;white-space:nowrap;}
+        .blog-hero-tag{font-size:.68rem;font-weight:500;text-transform:uppercase;letter-spacing:.22em;color:var(--gold);margin-bottom:1rem;display:block;position:relative;padding-left:2rem;}
+        .blog-hero-tag::before{content:'';position:absolute;left:0;top:50%;width:1.3rem;height:1px;background:var(--gold);}
+        .blog-hero h1{font-family:var(--font-display);font-size:clamp(2.8rem,5vw,4.5rem);font-weight:300;color:var(--cream);line-height:1.15;margin-bottom:1.2rem;}
+        .blog-hero h1 em{font-style:italic;color:var(--gold);}
+        .blog-hero p{font-size:1rem;line-height:1.8;color:rgba(247,243,238,.6);max-width:520px;}
+
+        .blog-filters{background:var(--warm-white);padding:1.8rem 4rem;border-bottom:1px solid var(--border);display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;position:sticky;top:72px;z-index:100;}
+        .filter-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.18em;color:rgba(28,28,26,.4);margin-right:.5rem;white-space:nowrap;}
+        .filter-btn{padding:.4rem 1.1rem;border:1px solid var(--border);background:transparent;font-family:var(--font-body);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;transition:all .3s;color:var(--charcoal);}
+        .filter-btn:hover,.filter-btn.active{background:var(--terracotta);border-color:var(--terracotta);color:white;}
+
+        .blog-featured{padding:4rem 4rem 0;}
+        .featured-card{display:grid;grid-template-columns:1fr 1fr;background:var(--warm-white);overflow:hidden;cursor:pointer;transition:transform .4s;}
+        .featured-card:hover{transform:translateY(-4px);}
+        .featured-img-wrap{position:relative;overflow:hidden;}
+        .featured-img{width:100%;height:480px;object-fit:cover;display:block;transition:transform .6s;}
+        .featured-card:hover .featured-img{transform:scale(1.04);}
+        .featured-cat-badge{position:absolute;top:1.5rem;left:1.5rem;background:var(--terracotta);color:white;font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;padding:.35rem .9rem;}
+        .featured-content{padding:3.5rem;display:flex;flex-direction:column;justify-content:center;}
+        .featured-meta{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(28,28,26,.38);margin-bottom:1.2rem;display:flex;gap:1.5rem;}
+        .featured-title{font-family:var(--font-display);font-size:2rem;font-weight:300;color:var(--deep-brown);line-height:1.25;margin-bottom:1.2rem;}
+        .featured-excerpt{font-size:.92rem;line-height:1.9;color:rgba(28,28,26,.62);margin-bottom:2rem;flex:1;}
+        .featured-read{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--terracotta);display:inline-flex;align-items:center;gap:.5rem;background:none;border:none;font-family:var(--font-body);cursor:pointer;padding:0;transition:gap .3s;}
+        .featured-read:hover{gap:.9rem;}
+
+        .blog-grid-section{padding:3rem 4rem 5rem;}
+        .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;}
+        .article-card{background:var(--warm-white);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:transform .4s;}
+        .article-card:hover{transform:translateY(-6px);}
+        .article-img-wrap{position:relative;overflow:hidden;}
+        .article-img{width:100%;height:230px;object-fit:cover;display:block;transition:transform .5s;}
+        .article-card:hover .article-img{transform:scale(1.05);}
+        .article-cat-badge{position:absolute;top:1rem;left:1rem;background:var(--terracotta);color:white;font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;padding:.3rem .8rem;}
+        .article-body{padding:1.8rem;flex:1;display:flex;flex-direction:column;}
+        .article-meta{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(28,28,26,.38);margin-bottom:.8rem;display:flex;gap:1rem;}
+        .article-title{font-family:var(--font-display);font-size:1.35rem;font-weight:400;color:var(--deep-brown);line-height:1.3;margin-bottom:.8rem;}
+        .article-excerpt{font-size:.85rem;line-height:1.8;color:rgba(28,28,26,.58);flex:1;margin-bottom:1.5rem;}
+        .article-read{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--terracotta);display:inline-flex;align-items:center;gap:.4rem;background:none;border:none;font-family:var(--font-body);cursor:pointer;padding:0;transition:gap .3s;margin-top:auto;}
+        .article-read:hover{gap:.8rem;}
+
+        .art-overlay{display:none;position:fixed;inset:0;background:rgba(28,28,26,.82);z-index:3000;align-items:flex-start;justify-content:center;padding:2rem;backdrop-filter:blur(5px);overflow-y:auto;}
+        .art-overlay.active{display:flex;}
+        .art-modal{background:var(--warm-white);max-width:820px;width:100%;margin:auto;animation:slideUp .35s ease;}
+        @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+        .art-cover{width:100%;height:380px;object-fit:cover;display:block;}
+        .art-header{padding:3rem 3.5rem 1.5rem;}
+        .art-cat-badge{display:inline-block;background:var(--terracotta);color:white;font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;padding:.35rem .9rem;margin-bottom:1.2rem;}
+        .art-title{font-family:var(--font-display);font-size:2.2rem;font-weight:300;color:var(--deep-brown);line-height:1.2;margin-bottom:.8rem;}
+        .art-date{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(28,28,26,.38);}
+        .art-content{padding:1rem 3.5rem 1.5rem;font-size:.95rem;line-height:2;color:rgba(28,28,26,.72);}
+        .art-content h3{font-family:var(--font-display);font-size:1.45rem;font-weight:400;color:var(--deep-brown);margin:2rem 0 .8rem;}
+        .art-content p{margin-bottom:1.2rem;}
+        .art-content ul{list-style:none;margin:.5rem 0 1.5rem;}
+        .art-content ul li{padding-left:1.5rem;position:relative;margin-bottom:.5rem;line-height:1.8;}
+        .art-content ul li::before{content:'✦';position:absolute;left:0;color:var(--terracotta);font-size:.55rem;top:.5rem;}
+        .art-content blockquote{border-left:3px solid var(--terracotta);padding:1rem 1.5rem;margin:2rem 0;font-family:var(--font-display);font-size:1.2rem;font-style:italic;color:var(--deep-brown);background:var(--cream);}
+        .art-close-btn{display:flex;align-items:center;gap:.5rem;margin:0 3.5rem 3rem;background:none;border:1px solid var(--border);padding:.7rem 1.4rem;font-family:var(--font-body);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;color:var(--charcoal);transition:all .3s;}
+        .art-close-btn:hover{background:var(--deep-brown);color:white;border-color:var(--deep-brown);}
+
+        .blog-cta{background:var(--deep-brown);padding:5rem 4rem;text-align:center;}
+        .blog-cta h2{font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--cream);margin-bottom:1rem;}
+        .blog-cta h2 em{font-style:italic;color:var(--gold);}
+        .blog-cta p{color:rgba(247,243,238,.6);margin-bottom:2rem;font-size:.95rem;}
+        .btn-cta{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;background:var(--terracotta);color:white;text-decoration:none;font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .3s;}
+        .btn-cta:hover{background:var(--gold);transform:translateY(-2px);}
+
+        footer{background:var(--deep-brown);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+        .footer-logo{font-family:var(--font-display);font-size:1.2rem;font-weight:300;color:var(--cream);}
+        .footer-copy{font-size:.72rem;color:rgba(247,243,238,.4);text-align:center;}
+        .footer-links{display:flex;gap:2rem;flex-wrap:wrap;}
+        .footer-links a{font-size:.72rem;color:rgba(247,243,238,.5);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .3s;}
+        .footer-links a:hover{color:var(--gold);}
+
+        @media(max-width:1000px){.blog-grid{grid-template-columns:1fr 1fr;}.featured-card{grid-template-columns:1fr;}.featured-img{height:300px;}.featured-content{padding:2rem;}}
+        @media(max-width:768px){.navbar,.blog-hero,.blog-filters,.blog-featured,.blog-grid-section,.blog-cta{padding-left:1.5rem;padding-right:1.5rem;}nav{display:none;}.hamburger{display:flex;}.blog-hero{padding-top:7rem;}.blog-filters{top:65px;}footer{flex-direction:column;text-align:center;padding:2rem;}.footer-links{justify-content:center;}.art-header,.art-content{padding-left:1.5rem;padding-right:1.5rem;}.art-close-btn{margin-left:1.5rem;margin-right:1.5rem;}.art-cover{height:220px;}.art-title{font-size:1.6rem;}}
+        @media(max-width:600px){.blog-grid{grid-template-columns:1fr;}}
+    </style>
+</head>
+<body>
+
+<div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" onclick="closeMobileMenu()">&#x2715;</button>
+    <a href="index.html" onclick="closeMobileMenu()">In&iacute;cio</a>
+    <a href="index.html#sobre" onclick="closeMobileMenu()">Sobre</a>
+    <a href="index.html#servicos" onclick="closeMobileMenu()">Servi&ccedil;os</a>
+    <a href="index.html#contato" onclick="closeMobileMenu()">Contato</a>
+</div>
+
+<header class="navbar" id="navbar">
+    <a href="index.html" class="logo">LC <span>Consultoria e Cr&iacute;tica Gastron&ocirc;mica</span></a>
+    <nav>
+        <a href="index.html">In&iacute;cio</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#servicos">Servi&ccedil;os</a>
+        <a href="index.html#consultores">Consultora</a>
+        <a href="blog.html" class="active">Blog</a>
+        <a href="index.html#contato">Contato</a>
+    </nav>
+    <div class="hamburger" onclick="openMobileMenu()"><span></span><span></span><span></span></div>
+</header>
+
+<section class="blog-hero">
+    <span class="blog-hero-tag">Conhecimento &amp; Inspira&ccedil;&atilde;o</span>
+    <h1>Blog <em>Gastron&ocirc;mico</em></h1>
+    <p>Artigos, tend&ecirc;ncias, t&eacute;cnicas e reflex&otilde;es sobre o universo da gastronomia, consultoria e gest&atilde;o de neg&oacute;cios aliment&iacute;cios &mdash; por Lienys Carvalho.</p>
+</section>
+
+<div class="blog-filters">
+    <span class="filter-label">Filtrar:</span>
+    <button class="filter-btn active" onclick="filterCat('todos',this)">Todos</button>
+    <button class="filter-btn" onclick="filterCat('cardapio',this)">Card&aacute;pio</button>
+    <button class="filter-btn" onclick="filterCat('gestao',this)">Gest&atilde;o</button>
+    <button class="filter-btn" onclick="filterCat('tendencias',this)">Tend&ecirc;ncias</button>
+    <button class="filter-btn" onclick="filterCat('eventos',this)">Eventos</button>
+    <button class="filter-btn" onclick="filterCat('marketing',this)">Marketing</button>
+    <button class="filter-btn" onclick="filterCat('critica',this)">Cr&iacute;tica</button>
+    <button class="filter-btn" onclick="filterCat('treinamento',this)">Treinamento</button>
+</div>
+
+<div class="blog-featured" id="featuredSection">
+    <div class="featured-card" onclick="openArt(0)" data-cat="cardapio">
+        <div class="featured-img-wrap">
+            <img class="featured-img" src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=800&fit=crop&auto=format" alt="Engenharia de Card&aacute;pio">
+            <span class="featured-cat-badge">Card&aacute;pio &mdash; Destaque</span>
+        </div>
+        <div class="featured-content">
+            <div class="featured-meta"><span>Mar&ccedil;o 2025</span><span>10 min de leitura</span></div>
+            <h2 class="featured-title">Engenharia de Card&aacute;pio: como transformar seu menu em m&aacute;quina de lucro</h2>
+            <p class="featured-excerpt">A maioria dos restaurantes deixa dinheiro na mesa todos os dias sem perceber. A engenharia de card&aacute;pio &eacute; a metodologia que revela quais pratos s&atilde;o seus verdadeiros her&oacute;is &mdash; e quais est&atilde;o drenando sua margem silenciosamente. Descubra como usar essa ferramenta poderosa.</p>
+            <button class="featured-read">Ler artigo completo <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+        </div>
+    </div>
+</div>
+
+<div class="blog-grid-section">
+    <div class="blog-grid" id="blogGrid">
+
+        <div class="article-card" data-cat="gestao" onclick="openArt(1)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Gestão</span></div>
+            <div class="article-body"><div class="article-meta"><span>Fev 2025</span><span>8 min</span></div><h3 class="article-title">CMV: o indicador que separa restaurantes lucrativos dos que fecham</h3><p class="article-excerpt">Entenda como calcular, monitorar e reduzir o Custo de Mercadoria Vendida para transformar a saúde financeira do seu negócio.</p><button class="article-read" onclick="event.stopPropagation();openArt(1)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="tendencias" onclick="openArt(2)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Tendências</span></div>
+            <div class="article-body"><div class="article-meta"><span>Jan 2025</span><span>7 min</span></div><h3 class="article-title">As 8 tendências gastronômicas que vão definir 2025 e 2026</h3><p class="article-excerpt">Da fermentação artesanal aos ingredientes nativos: o que chefs precisam incorporar agora para se manter relevantes.</p><button class="article-read" onclick="event.stopPropagation();openArt(2)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="eventos" onclick="openArt(3)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Eventos</span></div>
+            <div class="article-body"><div class="article-meta"><span>Dez 2024</span><span>9 min</span></div><h3 class="article-title">Como planejar um evento gastronômico que o cliente nunca esquece</h3><p class="article-excerpt">Do conceito ao prato: o passo a passo completo para criar experiências memoráveis.</p><button class="article-read" onclick="event.stopPropagation();openArt(3)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="marketing" onclick="openArt(4)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Marketing</span></div>
+            <div class="article-body"><div class="article-meta"><span>Nov 2024</span><span>6 min</span></div><h3 class="article-title">Instagram para restaurantes: o que realmente funciona em 2025</h3><p class="article-excerpt">Além das fotos bonitas: estratégia de conteúdo, reels e como transformar seguidores em clientes fiéis.</p><button class="article-read" onclick="event.stopPropagation();openArt(4)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="critica" onclick="openArt(5)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Crítica</span></div>
+            <div class="article-body"><div class="article-meta"><span>Out 2024</span><span>11 min</span></div><h3 class="article-title">O que a crítica gastronômica avalia — e como preparar seu restaurante</h3><p class="article-excerpt">Conheça os critérios reais que avaliadores usam e como elevar cada aspecto da experiência.</p><button class="article-read" onclick="event.stopPropagation();openArt(5)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="treinamento" onclick="openArt(6)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Treinamento</span></div>
+            <div class="article-body"><div class="article-meta"><span>Set 2024</span><span>8 min</span></div><h3 class="article-title">Liderança na cozinha: como formar equipes de alta performance</h3><p class="article-excerpt">A rotatividade é um dos maiores desafios do setor. Veja como criar uma cultura que inspira e retém talentos.</p><button class="article-read" onclick="event.stopPropagation();openArt(6)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="cardapio" onclick="openArt(7)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Cardápio</span></div>
+            <div class="article-body"><div class="article-meta"><span>Ago 2024</span><span>9 min</span></div><h3 class="article-title">Ingredientes nativos brasileiros: o tesouro que falta no seu cardápio</h3><p class="article-excerpt">Jambu, tucupi, baru — a biodiversidade brasileira coloca nossa gastronomia no mapa mundial.</p><button class="article-read" onclick="event.stopPropagation();openArt(7)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="gestao" onclick="openArt(8)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Gestão</span></div>
+            <div class="article-body"><div class="article-meta"><span>Jul 2024</span><span>12 min</span></div><h3 class="article-title">Abrindo seu primeiro restaurante: o que ninguém te conta antes</h3><p class="article-excerpt">Erros evitáveis, decisões críticas e o checklist completo para abrir com segurança.</p><button class="article-read" onclick="event.stopPropagation();openArt(8)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="cardapio" onclick="openArt(9)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3b68?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Cardápio</span></div>
+            <div class="article-body"><div class="article-meta"><span>Jun 2024</span><span>7 min</span></div><h3 class="article-title">Precificação de pratos: como definir o preço certo sem perder clientes</h3><p class="article-excerpt">A fórmula correta de markup e os fatores que influenciam o preço ideal para cada prato.</p><button class="article-read" onclick="event.stopPropagation();openArt(9)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="cardapio" onclick="openArt(10)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Cardápio</span></div>
+            <div class="article-body"><div class="article-meta"><span>Mai 2024</span><span>8 min</span></div><h3 class="article-title">Menu degustação: quando vale a pena e como montar um que encanta</h3><p class="article-excerpt">A forma mais sofisticada de apresentar a identidade de um restaurante — do conceito à execução.</p><button class="article-read" onclick="event.stopPropagation();openArt(10)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="gestao" onclick="openArt(11)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Gestão</span></div>
+            <div class="article-body"><div class="article-meta"><span>Abr 2024</span><span>9 min</span></div><h3 class="article-title">Controle de estoque em restaurantes: guia prático para reduzir perdas</h3><p class="article-excerpt">FIFO, inventário rotativo, par stock: as técnicas que transformam o estoque em aliado da rentabilidade.</p><button class="article-read" onclick="event.stopPropagation();openArt(11)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="gestao" onclick="openArt(12)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Gestão</span></div>
+            <div class="article-body"><div class="article-meta"><span>Mar 2024</span><span>10 min</span></div><h3 class="article-title">DRE para restaurantes: como ler e usar o demonstrativo de resultados</h3><p class="article-excerpt">O mapa financeiro do seu restaurante: entenda cada linha e tome decisões baseadas em dados reais.</p><button class="article-read" onclick="event.stopPropagation();openArt(12)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="tendencias" onclick="openArt(13)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Tendências</span></div>
+            <div class="article-body"><div class="article-meta"><span>Fev 2024</span><span>6 min</span></div><h3 class="article-title">Gastronomia sustentável: como reduzir desperdício e aumentar rentabilidade</h3><p class="article-excerpt">10 práticas sustentáveis que reduzem custos, encantam clientes e preservam o planeta.</p><button class="article-read" onclick="event.stopPropagation();openArt(13)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="tendencias" onclick="openArt(14)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Tendências</span></div>
+            <div class="article-body"><div class="article-meta"><span>Jan 2024</span><span>7 min</span></div><h3 class="article-title">O boom das dark kitchens: oportunidade ou risco para o seu negócio?</h3><p class="article-excerpt">Tudo sobre ghost kitchens: vantagens, riscos e como decidir se esse modelo faz sentido para você.</p><button class="article-read" onclick="event.stopPropagation();openArt(14)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="tendencias" onclick="openArt(15)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Tendências</span></div>
+            <div class="article-body"><div class="article-meta"><span>Dez 2023</span><span>8 min</span></div><h3 class="article-title">Cafeterias especiais: como o mercado de café transformou a gastronomia brasileira</h3><p class="article-excerpt">O movimento de cafés especiais criou um mercado sofisticado. Saiba como aproveitar essa onda.</p><button class="article-read" onclick="event.stopPropagation();openArt(15)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="eventos" onclick="openArt(16)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Eventos</span></div>
+            <div class="article-body"><div class="article-meta"><span>Nov 2023</span><span>8 min</span></div><h3 class="article-title">Finger food para eventos corporativos: tendências e dicas de produção</h3><p class="article-excerpt">Elegância em uma mordida: como criar finger foods que impressionam e são viáveis para produção em escala.</p><button class="article-read" onclick="event.stopPropagation();openArt(16)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="eventos" onclick="openArt(17)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Eventos</span></div>
+            <div class="article-body"><div class="article-meta"><span>Out 2023</span><span>7 min</span></div><h3 class="article-title">Harmonização de vinhos e gastronomia: princípios que todo chef deve conhecer</h3><p class="article-excerpt">Princípios de semelhança, contraste e regionalidade que tornam cada harmonização memorável.</p><button class="article-read" onclick="event.stopPropagation();openArt(17)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="eventos" onclick="openArt(18)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Eventos</span></div>
+            <div class="article-body"><div class="article-meta"><span>Set 2023</span><span>6 min</span></div><h3 class="article-title">Jantares temáticos: como criar experiências imersivas que geram receita recorrente</h3><p class="article-excerpt">Lotação garantida, caixa antecipado e experiências inesquecíveis: o modelo de jantares temáticos.</p><button class="article-read" onclick="event.stopPropagation();openArt(18)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="marketing" onclick="openArt(19)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Marketing</span></div>
+            <div class="article-body"><div class="article-meta"><span>Ago 2023</span><span>7 min</span></div><h3 class="article-title">Google Meu Negócio: o guia completo para aparecer primeiro nas buscas</h3><p class="article-excerpt">Como otimizar seu perfil para dobrar o número de clientes que chegam pela busca orgânica.</p><button class="article-read" onclick="event.stopPropagation();openArt(19)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="marketing" onclick="openArt(20)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Marketing</span></div>
+            <div class="article-body"><div class="article-meta"><span>Jul 2023</span><span>6 min</span></div><h3 class="article-title">Fotografia gastronômica com celular: técnicas profissionais sem câmera cara</h3><p class="article-excerpt">Luz natural, fundo neutro e regra dos terços: técnicas que fazem qualquer prato ficar irresistível.</p><button class="article-read" onclick="event.stopPropagation();openArt(20)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="marketing" onclick="openArt(21)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Marketing</span></div>
+            <div class="article-body"><div class="article-meta"><span>Jun 2023</span><span>8 min</span></div><h3 class="article-title">Programa de fidelidade para restaurantes: clientes que voltam e recomendam</h3><p class="article-excerpt">Cartão de selos, pontos ou clube de membros: qual modelo faz mais sentido para o seu negócio.</p><button class="article-read" onclick="event.stopPropagation();openArt(21)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="critica" onclick="openArt(22)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Crítica</span></div>
+            <div class="article-body"><div class="article-meta"><span>Mai 2023</span><span>9 min</span></div><h3 class="article-title">Como responder a avaliações negativas e transformá-las em oportunidade</h3><p class="article-excerpt">O protocolo profissional que transforma críticas em credibilidade e conquista novos clientes.</p><button class="article-read" onclick="event.stopPropagation();openArt(22)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="critica" onclick="openArt(23)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Crítica</span></div>
+            <div class="article-body"><div class="article-meta"><span>Abr 2023</span><span>7 min</span></div><h3 class="article-title">Guias gastronômicos e prêmios: como preparar seu restaurante para ser reconhecido</h3><p class="article-excerpt">Guia Michelin, 4 Rodas, 50 Best: o que os avaliadores buscam e como construir consistência.</p><button class="article-read" onclick="event.stopPropagation();openArt(23)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="critica" onclick="openArt(24)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Crítica</span></div>
+            <div class="article-body"><div class="article-meta"><span>Mar 2023</span><span>8 min</span></div><h3 class="article-title">Serviço de salão: o elo que une a cozinha ao cliente e define a experiência</h3><p class="article-excerpt">Conhecimento do cardápio, leitura do cliente e timing: os pilares do serviço que encanta.</p><button class="article-read" onclick="event.stopPropagation();openArt(24)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="treinamento" onclick="openArt(25)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Treinamento</span></div>
+            <div class="article-body"><div class="article-meta"><span>Fev 2023</span><span>7 min</span></div><h3 class="article-title">Como criar um manual de operações para o seu restaurante</h3><p class="article-excerpt">O DNA operacional do negócio: processos documentados que garantem qualidade independente de quem está trabalhando.</p><button class="article-read" onclick="event.stopPropagation();openArt(25)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="treinamento" onclick="openArt(26)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Treinamento</span></div>
+            <div class="article-body"><div class="article-meta"><span>Jan 2023</span><span>6 min</span></div><h3 class="article-title">Sommelier para restaurantes: quando contratar e como treinar sua equipe em vinhos</h3><p class="article-excerpt">Do básico ao avançado: como capacitar sua equipe para vender e servir vinhos com confiança.</p><button class="article-read" onclick="event.stopPropagation();openArt(26)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+        <div class="article-card" data-cat="treinamento" onclick="openArt(27)">
+            <div class="article-img-wrap"><img class="article-img" src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&fit=crop&auto=format" alt=""><span class="article-cat-badge">Treinamento</span></div>
+            <div class="article-body"><div class="article-meta"><span>Dez 2022</span><span>9 min</span></div><h3 class="article-title">Gestão de conflitos na cozinha: como criar um ambiente de trabalho saudável</h3><p class="article-excerpt">Estratégias práticas para transformar a cozinha brigada em um ambiente que produz mais e retém talentos.</p><button class="article-read" onclick="event.stopPropagation();openArt(27)">Ler artigo <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        </div>
+
+    </div>
+</div>
+
+<div class="art-overlay" id="artOverlay" onclick="closeArtOutside(event)">
+    <div class="art-modal" id="artModal">
+        <img id="artCover" class="art-cover" src="" alt="">
+        <div class="art-header">
+            <span class="art-cat-badge" id="artCat"></span>
+            <h1 class="art-title" id="artTitle"></h1>
+            <div class="art-date" id="artDate"></div>
+        </div>
+        <div class="art-content" id="artContent"></div>
+        <button class="art-close-btn" onclick="closeArt()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Voltar ao blog
+        </button>
+    </div>
+</div>
+
+<section class="blog-cta">
+    <h2>Quer consultoria <em>personalizada</em>?</h2>
+    <p>Aplique estes conhecimentos no seu neg&oacute;cio com o suporte de uma especialista. Entre em contato e solicite uma proposta.</p>
+    <a href="https://wa.me/5521984821444?text=Ol%C3%A1 Lienys! Li o blog e gostaria de saber mais sobre seus servi%C3%A7os." target="_blank" class="btn-cta">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        Falar com Lienys
+    </a>
+</section>
+
+<footer>
+    <div class="footer-logo">LC Consultoria e Cr&iacute;tica Gastron&ocirc;mica</div>
+    <p class="footer-copy">&copy; 2025 Lienys Carvalho. Todos os direitos reservados.</p>
+    <div class="footer-links">
+        <a href="index.html">In&iacute;cio</a>
+        <a href="index.html#contato">Contato</a>
+        <a href="privacidade.html">Pol&iacute;tica de Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+    </div>
+</footer>
+
+<script>
+const artData = [
+  // 0 - CARDÁPIO
+  { cat:"Cardápio", date:"Março 2025 · 10 min", img:"https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=1000&fit=crop&auto=format", title:"Engenharia de Cardápio: como transformar seu menu em máquina de lucro", html:`<h3>O que é a engenharia de cardápio?</h3><p>A engenharia de cardápio analisa cada item do menu em duas dimensões: <strong>popularidade</strong> e <strong>rentabilidade</strong>. Com isso, cada prato é categorizado em quatro grupos estratégicos.</p><h3>Os quatro quadrantes</h3><ul><li><strong>Estrelas</strong> — Alta popularidade + alta margem. Destaque sempre.</li><li><strong>Cavalos de batalha</strong> — Muito pedidos, margem baixa. Reprecifique.</li><li><strong>Quebra-cabeças</strong> — Alta margem, pouco pedidos. Reposicione.</li><li><strong>Cães</strong> — Baixos nos dois. Considere remover.</li></ul><h3>Resultados</h3><p>Aplicar essa metodologia resulta em aumento médio de 8% a 15% na margem bruta em 60 a 90 dias.</p>` },
+  // 1 - GESTÃO
+  { cat:"Gestão", date:"Fevereiro 2025 · 8 min", img:"https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1000&fit=crop&auto=format", title:"CMV: o indicador que separa restaurantes lucrativos dos que fecham", html:`<h3>O que é CMV?</h3><p>CMV é o Custo de Mercadoria Vendida. Fórmula: Estoque inicial + Compras − Estoque final = CMV.</p><h3>Referências por segmento</h3><ul><li>À la carte: 28%–35%</li><li>Churrascaria: 35%–42%</li><li>Fast food: 25%–32%</li><li>Alta gastronomia: 30%–38%</li></ul><p>Uma redução de 3 pontos percentuais no CMV de R$80.000/mês representa R$28.800 de economia por ano.</p>` },
+  // 2 - TENDÊNCIAS
+  { cat:"Tendências", date:"Janeiro 2025 · 7 min", img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1000&fit=crop&auto=format", title:"As 8 tendências gastronômicas que vão definir 2025 e 2026", html:`<h3>O momento</h3><p>Fermentação artesanal, ingredientes nativos brasileiros, menus plant-based de luxo, experiências imersivas e IA na gestão são as tendências que moldam 2025 e 2026.</p><ul><li>Ingredientes nativos brasileiros no protagonismo</li><li>Fermentação artesanal e sabores complexos</li><li>Menus plant-based sofisticados</li><li>Cozinha do desperdício zero</li><li>Transparência total da cadeia produtiva</li></ul><blockquote>"Tendência sem identidade é fantasia. Só adote o que conversa com quem você é."</blockquote>` },
+  // 3 - EVENTOS
+  { cat:"Eventos", date:"Dezembro 2024 · 9 min", img:"https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1000&fit=crop&auto=format", title:"Como planejar um evento gastronômico que o cliente nunca esquece", html:`<h3>As 4 etapas</h3><ul><li><strong>Conceito e narrativa:</strong> Qual emoção o convidado leva para casa?</li><li><strong>Público e formato:</strong> Número, perfil, restrições, tipo de serviço.</li><li><strong>Cardápio protagonista:</strong> Escalável, impactante, coerente.</li><li><strong>Logística:</strong> 1 garçom para cada 8–10 pessoas em serviço empratado.</li></ul>` },
+  // 4 - MARKETING
+  { cat:"Marketing", date:"Novembro 2024 · 6 min", img:"https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=1000&fit=crop&auto=format", title:"Instagram para restaurantes: o que realmente funciona em 2025", html:`<h3>Os 5 pilares</h3><ul><li>Identidade visual coesa</li><li>Reels com alcance 3× maior que fotos</li><li>Stories diários (mín. 5/dia)</li><li>Resposta em até 2 horas</li><li>8–15 hashtags estratégicas por post</li></ul><blockquote>"As pessoas decidem onde comer pela tela do celular — antes de sair de casa."</blockquote>` },
+  // 5 - CRÍTICA
+  { cat:"Crítica", date:"Outubro 2024 · 11 min", img:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1000&fit=crop&auto=format", title:"O que a crítica gastronômica avalia — e como preparar seu restaurante", html:`<h3>O que é avaliado</h3><ul><li>Técnica e execução dos pratos</li><li>Identidade e coerência do cardápio</li><li>Qualidade e sazonalidade dos ingredientes</li><li>Experiência completa: serviço, ambiente, tempo de espera</li><li>Precificação justa e percepção de valor</li><li>Autenticidade — personalidade própria</li></ul><blockquote>"Um restaurante não precisa ser perfeito. Precisa ser honesto e consistente."</blockquote>` },
+  // 6 - TREINAMENTO
+  { cat:"Treinamento", date:"Setembro 2024 · 8 min", img:"https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1000&fit=crop&auto=format", title:"Liderança na cozinha: como formar equipes de alta performance", html:`<h3>Por que profissionais saem</h3><ul><li>Falta de reconhecimento e crescimento</li><li>Ambiente tóxico e liderança por medo</li><li>Jornadas excessivas sem compensação</li><li>Ausência de treinamento contínuo</li></ul><h3>Como reter talentos</h3><ul><li>Reuniões focadas em aprendizados</li><li>Plano de desenvolvimento individual</li><li>Reconhecimento público das conquistas</li><li>Cultura de segurança psicológica</li></ul>` },
+  // 7 - CARDÁPIO 2
+  { cat:"Cardápio", date:"Agosto 2024 · 9 min", img:"https://images.unsplash.com/photo-1542838132-92c53300491e?w=1000&fit=crop&auto=format", title:"Ingredientes nativos brasileiros: o tesouro que falta no seu cardápio", html:`<h3>10 ingredientes que transformam cardápios</h3><ul><li><strong>Tucupi:</strong> ácido e umami intenso da Amazônia</li><li><strong>Jambu:</strong> dormência única na boca</li><li><strong>Baru:</strong> oleaginosa do Cerrado</li><li><strong>Priprioca:</strong> raiz aromática amazônica</li><li><strong>Umbu:</strong> acidez marcante do Semiárido</li><li><strong>Cacau nativo:</strong> perfis de sabor incomparáveis</li><li><strong>Guariroba:</strong> palmito amargo do Cerrado</li><li><strong>Caju integral:</strong> muito além da castanha</li><li><strong>Pirarucu:</strong> maior peixe de escamas do mundo</li><li><strong>Ervas da Caatinga:</strong> aroeira, mandacaru, xique-xique</li></ul>` },
+  // 8 - GESTÃO 2
+  { cat:"Gestão", date:"Julho 2024 · 12 min", img:"https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1000&fit=crop&auto=format", title:"Abrindo seu primeiro restaurante: o que ninguém te conta antes", html:`<h3>Os 5 erros mais comuns</h3><ul><li>Subestimar o capital de giro (planeje 3–6 meses)</li><li>Escolher ponto sem análise de mercado</li><li>Abrir sem processos (POPs) definidos</li><li>Cardápio grande demais</li><li>Ignorar exigências da Vigilância Sanitária</li></ul><h3>Checklist essencial</h3><ul><li>Plano de negócio com projeção de 12 meses</li><li>Cardápio com fichas técnicas e custo por prato</li><li>Regularizações sanitárias e licenças</li><li>Soft opening com convidados para testes reais</li></ul>` },
+  // 9 - CARDÁPIO 3
+  { cat:"Cardápio", date:"Junho 2024 · 7 min", img:"https://images.unsplash.com/photo-1476224203421-9ac39bcb3b68?w=1000&fit=crop&auto=format", title:"Precificação de pratos: como definir o preço certo sem perder clientes", html:`<h3>O markup correto</h3><p>A precificação correta é uma das decisões mais importantes para a rentabilidade de um restaurante. A fórmula básica: Preço de Venda = Custo do Prato ÷ (1 − Margem Desejada).</p><h3>Fatores que influenciam o preço</h3><ul><li>Custo real dos insumos (ficha técnica atualizada)</li><li>Posicionamento do estabelecimento no mercado</li><li>Preços praticados pela concorrência local</li><li>Percepção de valor pelo cliente</li><li>Custos fixos e ponto de equilíbrio</li></ul><h3>Erros mais comuns</h3><ul><li>Precificar apenas com base na concorrência</li><li>Não atualizar preços quando os insumos sobem</li><li>Subestimar o custo real de produção</li></ul>` },
+  // 10 - CARDÁPIO 4
+  { cat:"Cardápio", date:"Maio 2024 · 8 min", img:"https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=1000&fit=crop&auto=format", title:"Menu degustação: quando vale a pena e como montar um que encanta", html:`<h3>O que é um menu degustação?</h3><p>Um menu degustação é uma sequência cuidadosamente curada de pequenas porções que conta uma história gastronômica completa. É a forma mais sofisticada de apresentar a identidade de um restaurante.</p><h3>Quando faz sentido?</h3><ul><li>Quando o chef tem forte identidade autoral</li><li>Em estabelecimentos com ticket médio elevado</li><li>Para criar experiências memoráveis e diferenciadas</li><li>Quando há ingredientes sazonais que merecem protagonismo</li></ul><h3>Como estruturar</h3><ul><li>6 a 12 tempos é o padrão para menus completos</li><li>Progressão de sabores: do leve ao intenso</li><li>Harmonização de bebidas integrada ao menu</li><li>Narrativa que conecta cada prato ao próximo</li></ul>` },
+  // 11 - GESTÃO 3
+  { cat:"Gestão", date:"Abril 2024 · 9 min", img:"https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1000&fit=crop&auto=format", title:"Controle de estoque em restaurantes: guia prático para reduzir perdas", html:`<h3>Por que o estoque é crítico?</h3><p>Em restaurantes, o estoque representa dinheiro parado. Um controle eficiente reduz desperdício, evita falta de produtos e melhora o CMV diretamente.</p><h3>Técnicas fundamentais</h3><ul><li><strong>FIFO (First In, First Out):</strong> O que entra primeiro sai primeiro — evita vencimentos</li><li><strong>Inventário rotativo:</strong> Contagem semanal por categorias, não mensal de tudo</li><li><strong>Par stock:</strong> Quantidade mínima que deve sempre existir no estoque</li><li><strong>Requisição interna:</strong> Controle do que a cozinha retira do estoque diariamente</li></ul><h3>Indicadores para monitorar</h3><ul><li>Giro de estoque (vezes por mês)</li><li>Percentual de perdas por vencimento</li><li>Custo de estoque como % da receita</li></ul>` },
+  // 12 - GESTÃO 4
+  { cat:"Gestão", date:"Março 2024 · 10 min", img:"https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1000&fit=crop&auto=format", title:"DRE para restaurantes: como ler e usar o demonstrativo de resultados", html:`<h3>O que é a DRE?</h3><p>A Demonstração do Resultado do Exercício (DRE) é o mapa financeiro do seu restaurante. Ela mostra se você está realmente lucrando ou apenas movimentando dinheiro.</p><h3>Estrutura básica</h3><ul><li><strong>Receita Bruta:</strong> Tudo o que entrou no caixa</li><li><strong>(−) Impostos e devoluções:</strong> O que não é seu</li><li><strong>(=) Receita Líquida:</strong> O que realmente faturou</li><li><strong>(−) CMV:</strong> Custo dos insumos vendidos</li><li><strong>(=) Lucro Bruto:</strong> O que sobrou da produção</li><li><strong>(−) Despesas operacionais:</strong> Aluguel, salários, energia</li><li><strong>(=) EBITDA/Lucro Líquido:</strong> O resultado real</li></ul><h3>Como usar na tomada de decisão</h3><p>Analise a DRE mensalmente. Compare com o mês anterior e com o mesmo período do ano passado. Identifique quais linhas cresceram mais que a receita — essas são os gargalos financeiros.</p>` },
+  // 13 - TENDÊNCIAS 2
+  { cat:"Tendências", date:"Fevereiro 2024 · 6 min", img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1000&fit=crop&auto=format", title:"Gastronomia sustentável: como reduzir desperdício e aumentar rentabilidade", html:`<h3>Sustentabilidade que lucra</h3><p>Uma redução de 5% no desperdício de um restaurante com CMV de 35% e faturamento de R$100.000/mês representa R$1.750 de economia mensal — ou R$21.000 por ano.</p><h3>10 práticas sustentáveis</h3><ul><li>Aproveitamento integral de vegetais e carnes</li><li>Cardápio sazonal com ingredientes locais</li><li>Relação direta com produtores locais</li><li>Porcionamento preciso com fichas técnicas</li><li>FIFO rigoroso no estoque</li><li>Compostagem dos resíduos orgânicos</li><li>Embalagens de delivery compostáveis</li><li>Gestão eficiente de energia</li><li>Reaproveitamento de água de cocção</li><li>Cardápio reduzido e rotativo</li></ul>` },
+  // 14 - TENDÊNCIAS 3
+  { cat:"Tendências", date:"Janeiro 2024 · 7 min", img:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1000&fit=crop&auto=format", title:"O boom das dark kitchens: oportunidade ou risco para o seu negócio?", html:`<h3>O que são dark kitchens?</h3><p>Dark kitchens (ou ghost kitchens) são cozinhas profissionais sem área de atendimento ao público, dedicadas exclusivamente à produção para delivery. O modelo explodiu durante a pandemia e segue crescendo no Brasil.</p><h3>Vantagens</h3><ul><li>Investimento inicial muito menor que um restaurante físico</li><li>Custos fixos reduzidos (sem salão, sem garçons)</li><li>Agilidade para testar novos conceitos</li><li>Possibilidade de operar múltiplas marcas na mesma cozinha</li></ul><h3>Riscos e desafios</h3><ul><li>Alta dependência das plataformas (iFood, Rappi)</li><li>Margens comprimidas pelas taxas das plataformas (20%–30%)</li><li>Dificuldade de construir relacionamento com o cliente</li><li>Concorrência acirrada e guerra de preços</li></ul>` },
+  // 15 - TENDÊNCIAS 4
+  { cat:"Tendências", date:"Dezembro 2023 · 8 min", img:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1000&fit=crop&auto=format", title:"Cafeterias especiais: como o mercado de café transformou a gastronomia brasileira", html:`<h3>A terceira onda do café</h3><p>O Brasil, maior produtor e segundo maior consumidor de café do mundo, vive uma revolução: o movimento de cafés especiais transformou o grão em produto gourmet, criando um mercado sofisticado e em rápido crescimento.</p><h3>Oportunidades de negócio</h3><ul><li>Cafeterias especializadas com curadoria de origens</li><li>Integração do café especial em restaurantes como diferencial</li><li>Harmonizações de café com gastronomia (maridagem)</li><li>Cursos e workshops de preparo para clientes</li></ul><h3>O que é preciso saber</h3><ul><li>Pontuação SCA: cafés com 80+ pontos são considerados especiais</li><li>Métodos alternativos: V60, Chemex, Aeropress, prensa francesa</li><li>Treinamento de barista como investimento no diferencial do negócio</li></ul>` },
+  // 16 - EVENTOS 2
+  { cat:"Eventos", date:"Novembro 2023 · 8 min", img:"https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1000&fit=crop&auto=format", title:"Finger food para eventos corporativos: tendências e dicas de produção", html:`<h3>Por que o finger food domina eventos?</h3><p>O finger food se tornou o formato preferido para eventos corporativos por combinar praticidade, elegância e possibilidade de personalização gastronômica. Permite que os convidados circulem e interajam enquanto se alimentam.</p><h3>Tendências atuais</h3><ul><li>Mini versões de pratos autorais em uma só mordida</li><li>Opções plant-based e sem glúten integradas ao menu principal</li><li>Apresentação em suportes inusitados (pedras, madeira, ardósia)</li><li>Harmonização com coquetéis autorais e mocktails</li></ul><h3>Dicas de produção</h3><ul><li>Planeje 8 a 12 peças por pessoa para coquetel de 2 horas</li><li>Equilibre quentes e frios em proporção 60%/40%</li><li>Produza no máximo 60% com antecedência — finalize no local</li><li>Mantenha fichas técnicas rigorosas para padronização</li></ul>` },
+  // 17 - EVENTOS 3
+  { cat:"Eventos", date:"Outubro 2023 · 7 min", img:"https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1000&fit=crop&auto=format", title:"Harmonização de vinhos e gastronomia: princípios que todo chef deve conhecer", html:`<h3>A arte da harmonização</h3><p>Harmonizar vinho e comida é criar uma experiência onde cada um potencializa o outro. Não há regras absolutas, mas há princípios que aumentam significativamente as chances de uma combinação memorável.</p><h3>Princípios fundamentais</h3><ul><li><strong>Semelhança:</strong> Pratos leves com vinhos leves; pratos intensos com vinhos encorpados</li><li><strong>Contraste:</strong> Acidez do vinho cortando a gordura do prato</li><li><strong>Regional:</strong> Vinhos e comidas da mesma região tendem a harmonizar bem</li><li><strong>Temperatura:</strong> Brancos e espumantes frios realçam frescor; tintos levemente resfriados revelam complexidade</li></ul><h3>Combinações clássicas e por quê funcionam</h3><ul><li>Champagne e ostras: acidez e minerais complementam o iodo marinho</li><li>Bordeaux e carne vermelha: taninos cortam a gordura proteica</li><li>Sauternes e foie gras: doçura equilibra a riqueza da gordura</li></ul>` },
+  // 18 - EVENTOS 4
+  { cat:"Eventos", date:"Setembro 2023 · 6 min", img:"https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=1000&fit=crop&auto=format", title:"Jantares temáticos: como criar experiências imersivas que geram receita recorrente", html:`<h3>O jantar temático como produto</h3><p>Jantares temáticos são uma das formas mais eficientes de gerar receita adicional para um restaurante. Com ingressos pré-vendidos, você garante lotação, planejamento de cozinha e fluxo de caixa antecipado.</p><h3>Temas que funcionam bem no Brasil</h3><ul><li>Cozinhas regionais brasileiras (Nordeste, Amazônia, Sul)</li><li>Harmonizações especiais (vinho natural, cervejas artesanais)</li><li>Menus sazonais (trufas, frutos do mar, caça)</li><li>Jantares às cegas (sem ver o prato antes de provar)</li><li>Menus históricos (gastronomia de décadas passadas)</li></ul><h3>Como precificar</h3><p>O ticket de um jantar temático deve ser 2,5× a 3× o ticket médio regular do estabelecimento. Inclua no preço: ingredientes premium, mise en place especial, equipe extra e margem para imprevistos.</p>` },
+  // 19 - MARKETING 2
+  { cat:"Marketing", date:"Agosto 2023 · 7 min", img:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1000&fit=crop&auto=format", title:"Google Meu Negócio para restaurantes: o guia completo para aparecer primeiro", html:`<h3>Por que o Google Meu Negócio é essencial?</h3><p>Quando alguém pesquisa "restaurante perto de mim" ou o nome do seu estabelecimento no Google, o primeiro resultado que aparece é o perfil do Google Meu Negócio. Um perfil otimizado pode dobrar o número de clientes que chegam pela busca orgânica.</p><h3>Como otimizar seu perfil</h3><ul><li>Fotos profissionais do ambiente, pratos e equipe (mín. 20 fotos)</li><li>Horários de funcionamento sempre atualizados</li><li>Cardápio online integrado ao perfil</li><li>Resposta a TODAS as avaliações — positivas e negativas</li><li>Posts semanais com promoções e novidades</li><li>Descrição completa com palavras-chave relevantes</li></ul><h3>Avaliações: como conseguir mais</h3><p>Treine a equipe para pedir avaliações no momento certo: após um elogio espontâneo do cliente. QR codes na mesa linking diretamente para a página de avaliação aumentam em 40% a taxa de resposta.</p>` },
+  // 20 - MARKETING 3
+  { cat:"Marketing", date:"Julho 2023 · 6 min", img:"https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=1000&fit=crop&auto=format", title:"Fotografia gastronômica com celular: técnicas profissionais sem câmera cara", html:`<h3>A câmera que você tem é suficiente</h3><p>Um smartphone atual com boa iluminação supera câmeras profissionais de 10 anos atrás. O que faz a diferença é técnica, não equipamento.</p><h3>5 princípios fundamentais</h3><ul><li><strong>Luz natural sempre:</strong> Posicione o prato próximo a uma janela, luz lateral cria volume</li><li><strong>Fundo neutro:</strong> Superfícies de madeira, pedra ou tecido linho não concorrem com o prato</li><li><strong>Regra dos terços:</strong> Não centralize — posicione o elemento principal em 1/3 da imagem</li><li><strong>Textura visível:</strong> Aproxime-se o suficiente para ver a textura dos ingredientes</li><li><strong>Consistência na edição:</strong> Use o mesmo preset/filtro para criar identidade visual</li></ul><h3>Apps recomendados</h3><ul><li>Lightroom Mobile: edição profissional gratuita</li><li>VSCO: presets e filtros com identidade editorial</li><li>Snapseed: ajustes precisos de luminosidade e cor</li></ul>` },
+  // 21 - MARKETING 4
+  { cat:"Marketing", date:"Junho 2023 · 8 min", img:"https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1000&fit=crop&auto=format", title:"Programa de fidelidade para restaurantes: como criar e manter clientes que voltam", html:`<h3>Por que fidelização importa?</h3><p>Conquistar um cliente novo custa 5× a 7× mais do que manter um cliente existente. Um programa de fidelidade bem estruturado aumenta a frequência de visitas, eleva o ticket médio e transforma clientes em promotores espontâneos.</p><h3>Modelos que funcionam para restaurantes</h3><ul><li><strong>Cartão de selos:</strong> Simples e eficaz para padarias e cafeterias</li><li><strong>Sistema de pontos:</strong> Cada real gasto gera pontos trocáveis por benefícios</li><li><strong>Club de membros:</strong> Mensalidade com benefícios exclusivos (reserva prioritária, desconto, brindes)</li><li><strong>Aniversário especial:</strong> Sempre gera retorno e boa vontade</li></ul><h3>Erros a evitar</h3><ul><li>Programa complexo demais que o cliente não entende</li><li>Benefícios de baixo valor percebido</li><li>Não comunicar o programa ativamente</li></ul>` },
+  // 22 - CRÍTICA 2
+  { cat:"Crítica", date:"Maio 2023 · 9 min", img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1000&fit=crop&auto=format", title:"Como responder a avaliações negativas e transformá-las em oportunidade", html:`<h3>Avaliação negativa não é o fim</h3><p>Estudos mostram que consumidores confiam mais em estabelecimentos com algumas avaliações negativas e respostas bem escritas do que em perfis com nota perfeita sem nenhuma crítica. A imperfeição respondida com profissionalismo gera credibilidade.</p><h3>O protocolo de resposta</h3><ul><li>Responda em até 24 horas — velocidade demonstra cuidado</li><li>Agradeça pelo feedback, mesmo que doloroso</li><li>Nunca discuta ou contradiga publicamente</li><li>Reconheça se houve falha real — autenticidade vale muito</li><li>Ofereça uma solução concreta (não apenas "venha de volta")</li><li>Leve a conversa para o privado quando necessário</li></ul><h3>O que jamais fazer</h3><ul><li>Responder com raiva ou sarcasmo</li><li>Culpar o cliente pela insatisfação</li><li>Copiar e colar a mesma resposta para todos</li><li>Ignorar — o silêncio também é uma resposta (péssima)</li></ul>` },
+  // 23 - CRÍTICA 3
+  { cat:"Crítica", date:"Abril 2023 · 7 min", img:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1000&fit=crop&auto=format", title:"Guias gastronômicos e prêmios: como preparar seu restaurante para ser reconhecido", html:`<h3>Os principais guias no Brasil</h3><p>O Guia Michelin chegou ao Brasil em 2015 e hoje cobre São Paulo e Rio de Janeiro. O Guia 4 Rodas, o mais tradicional do país, avalia anualmente centenas de estabelecimentos. Já o 50 Best Latin America coloca restaurantes brasileiros no mapa global.</p><h3>O que os avaliadores buscam</h3><ul><li>Qualidade constante — não excelência ocasional</li><li>Identidade clara e ponto de vista gastronômico</li><li>Serviço de alto nível em todos os turnos</li><li>Uso criativo e consciente de ingredientes</li><li>Experiência completa e coerente</li></ul><h3>Como se preparar</h3><ul><li>Treine toda a equipe para o mesmo padrão, sempre</li><li>Nunca perca consistência "porque é segunda-feira"</li><li>Documente suas receitas e processos rigorosamente</li><li>Construa relações genuínas com produtores e fornecedores</li></ul>` },
+  // 24 - CRÍTICA 4
+  { cat:"Crítica", date:"Março 2023 · 8 min", img:"https://images.unsplash.com/photo-1544025162-d76694265947?w=1000&fit=crop&auto=format", title:"Serviço de salão: o elo que une a cozinha ao cliente e define a experiência final", html:`<h3>O serviço como gastronomia</h3><p>A melhor comida do mundo pode ser destruída por um serviço ruim. O salão é a interface entre a cozinha e o cliente — e um serviço excelente eleva qualquer prato a uma experiência inesquecível.</p><h3>Os pilares do serviço de excelência</h3><ul><li><strong>Conhecimento do cardápio:</strong> Cada garçom deve conhecer cada prato como o próprio chef</li><li><strong>Leitura do cliente:</strong> Saber quando interagir e quando se distanciar</li><li><strong>Timing preciso:</strong> O prato certo no momento certo — nem apressado nem esquecido</li><li><strong>Antecipação:</strong> Repor o pão antes de ser pedido, oferecer água sem que peçam</li><li><strong>Recuperação de falhas:</strong> Como lidar com erros é tão importante quanto não errar</li></ul><h3>Treinamento prático</h3><ul><li>Role plays de situações difíceis com a equipe</li><li>Degustações regulares para o time conhecer o cardápio</li><li>Feedback imediato após cada serviço</li></ul>` },
+  // 25 - TREINAMENTO 2
+  { cat:"Treinamento", date:"Fevereiro 2023 · 7 min", img:"https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=1000&fit=crop&auto=format", title:"Como criar um manual de operações para o seu restaurante", html:`<h3>O que é um manual de operações?</h3><p>Um manual de operações (ou SOP — Standard Operating Procedures) é o conjunto de processos documentados que garante que seu restaurante funcione da mesma forma independente de quem está trabalhando. É o DNA operacional do negócio.</p><h3>O que deve constar</h3><ul><li>Abertura e fechamento detalhados por setor</li><li>Padrões de higiene e manipulação de alimentos</li><li>Receitas padronizadas com fotos de montagem</li><li>Protocolo de atendimento ao cliente</li><li>Gestão de reclamações e situações de crise</li><li>Procedimentos de emergência</li></ul><h3>Como implementar</h3><p>Comece documentando os processos mais críticos e mais sujeitos a erros. Envolva a equipe na criação — quem executa conhece melhor as nuances. Revise o manual a cada 6 meses ou sempre que houver mudanças significativas.</p>` },
+  // 26 - TREINAMENTO 3
+  { cat:"Treinamento", date:"Janeiro 2023 · 6 min", img:"https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=1000&fit=crop&auto=format", title:"Sommelier para restaurantes: quando contratar e como treinar sua equipe em vinhos", html:`<h3>Você precisa de um sommelier?</h3><p>Nem todo restaurante precisa de um sommelier profissional, mas todo estabelecimento que serve vinhos precisa de uma equipe que saiba o básico sobre o que está servindo. A diferença entre um upselling bem feito e um constrangimento está no conhecimento.</p><h3>Treinamento básico para a equipe</h3><ul><li>As principais uvas e regiões (sem decoreba — com contexto)</li><li>Como descrever um vinho de forma acessível ao cliente</li><li>Temperatura correta de serviço por tipo</li><li>Como abrir uma garrafa corretamente e apresentar ao cliente</li><li>Harmonizações básicas com o cardápio da casa</li></ul><h3>Quando contratar um sommelier</h3><ul><li>Quando a carta de vinhos tem mais de 30 rótulos</li><li>Quando o ticket médio supera R$200 por pessoa</li><li>Quando há eventos de harmonização frequentes</li></ul>` },
+  // 27 - TREINAMENTO 4
+  { cat:"Treinamento", date:"Dezembro 2022 · 9 min", img:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1000&fit=crop&auto=format", title:"Gestão de conflitos na cozinha: como criar um ambiente de trabalho saudável", html:`<h3>A cozinha como campo de batalha — e como mudar isso</h3><p>A cultura da cozinha brigada — hierarquia rígida, gritos e pressão extrema — é um modelo ultrapassado que custa caro às empresas em rotatividade, erros e reputação. Ambientes saudáveis produzem mais, melhor e com menos custo.</p><h3>Principais fontes de conflito em cozinhas</h3><ul><li>Comunicação deficiente durante o serviço</li><li>Distribuição desigual de tarefas e reconhecimento</li><li>Falta de clareza sobre responsabilidades</li><li>Pressão excessiva em horários de pico sem suporte</li><li>Diferenças de geração e cultura entre equipe</li></ul><h3>Estratégias de prevenção</h3><ul><li>Briefing de 10 minutos antes de cada serviço</li><li>Canal aberto para feedback anônimo</li><li>Política clara de zero tolerância a humilhações</li><li>Reconhecimento público das boas performances</li><li>1-on-1 mensal entre chef e cada membro da equipe</li></ul>` }
+]
+
+function openArt(i){
+  const a=artData[i];
+  document.getElementById("artCover").src=a.img;
+  document.getElementById("artCat").textContent=a.cat;
+  document.getElementById("artTitle").textContent=a.title;
+  document.getElementById("artDate").textContent=a.date;
+  document.getElementById("artContent").innerHTML=a.html;
+  const ov=document.getElementById("artOverlay");
+  ov.classList.add("active");
+  ov.scrollTop=0;
+  document.getElementById("artModal").scrollTop=0;
+  document.body.style.overflow="hidden";
+}
+function closeArt(){document.getElementById("artOverlay").classList.remove("active");document.body.style.overflow="";}
+function closeArtOutside(e){if(e.target===document.getElementById("artOverlay"))closeArt();}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeArt();});
+
+function filterCat(cat,btn){
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const fs=document.getElementById("featuredSection");
+  const fc=fs.querySelector(".featured-card");
+  fs.style.display=(cat==="todos"||fc.dataset.cat===cat)?"block":"none";
+  document.querySelectorAll(".article-card").forEach(c=>{c.style.display=(cat==="todos"||c.dataset.cat===cat)?"flex":"none";});
+}
+
+const nav=document.getElementById("navbar");
+window.addEventListener("scroll",()=>nav.classList.toggle("scrolled",window.scrollY>50));
+function openMobileMenu(){document.getElementById("mobileMenu").classList.add("active");document.body.style.overflow="hidden";}
+function closeMobileMenu(){document.getElementById("mobileMenu").classList.remove("active");document.body.style.overflow="";}
+</script>
+</body>
+</html>
