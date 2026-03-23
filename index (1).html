@@ -1,3 +1,6 @@
+
+Copiar
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -28,7 +31,7 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--cream); }
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
-
+ 
         /* ── NAVBAR ── */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -52,14 +55,14 @@
         .nav-social a:hover { background: var(--terracotta); border-color: var(--terracotta); color: white; transform: translateY(-2px); }
         .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
         .hamburger span { display: block; width: 24px; height: 2px; background: var(--charcoal); transition: all 0.3s; }
-
+ 
         /* ── MOBILE MENU ── */
         .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--deep-brown); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem; }
         .mobile-menu.active { display: flex; }
         .mobile-menu a { font-family: var(--font-display); font-size: 2.5rem; font-weight: 300; color: var(--cream); text-decoration: none; transition: color 0.3s; }
         .mobile-menu a:hover { color: var(--gold); }
         .mobile-close { position: absolute; top: 1.5rem; right: 2rem; background: none; border: none; color: var(--cream); font-size: 2rem; cursor: pointer; line-height: 1; }
-
+ 
         /* ── HERO ── */
         .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
         .hero-left { background: var(--deep-brown); display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 5rem 5rem; position: relative; overflow: hidden; }
@@ -82,7 +85,7 @@
         .stat { text-align: center; }
         .stat-num { font-family: var(--font-display); font-size: 2.5rem; font-weight: 300; color: var(--terracotta); line-height: 1; }
         .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--charcoal); opacity: 0.6; margin-top: 0.3rem; }
-
+ 
         /* ── BUTTONS ── */
         .btn-primary { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.9rem 2rem; background: var(--terracotta); color: white; text-decoration: none; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.3s; animation: fadeUp 0.8s 0.45s ease both; }
         .btn-primary:hover { background: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(196,99,58,0.3); }
@@ -92,7 +95,7 @@
         .btn-outline:hover { background: var(--charcoal); color: var(--cream); }
         .btn-white { background: white; color: var(--terracotta); border: none; padding: 0.9rem 2rem; font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; }
         .btn-white:hover { background: var(--deep-brown); color: white; }
-
+ 
         /* ── SECTION BASE ── */
         .section { padding: 7rem 4rem; }
         .section-tag { display: inline-block; font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: var(--terracotta); margin-bottom: 1rem; position: relative; padding-left: 2rem; }
@@ -100,7 +103,7 @@
         .section-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.2; color: var(--deep-brown); margin-bottom: 1.5rem; }
         .section-title em { font-style: italic; color: var(--terracotta); }
         .section-body { font-size: 1rem; line-height: 1.9; color: rgba(28,28,26,0.65); max-width: 560px; }
-
+ 
         /* ── SOBRE ── */
         .sobre { background: var(--warm-white); display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
         .sobre-image-wrap { position: relative; }
@@ -114,7 +117,7 @@
         .valor-icon { width: 32px; height: 32px; background: var(--light-sage); color: var(--sage); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
         .valor-item h4 { font-size: 0.82rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
         .valor-item p { font-size: 0.8rem; color: rgba(28,28,26,0.55); line-height: 1.6; }
-
+ 
         /* ── SERVIÇOS ── */
         .servicos { background: var(--deep-brown); padding: 7rem 4rem; position: relative; overflow: hidden; }
         .servicos::before { content: 'SERVIÇOS'; position: absolute; right: -3rem; top: 50%; transform: translateY(-50%) rotate(90deg); font-family: var(--font-display); font-size: 8rem; font-weight: 300; color: rgba(255,255,255,0.03); letter-spacing: 0.2em; white-space: nowrap; pointer-events: none; }
@@ -134,7 +137,7 @@
         .servico-btn:hover { background: var(--terracotta); color: white; border-color: var(--terracotta); }
         .servico-btn svg { transition: transform 0.3s; }
         .servico-btn:hover svg { transform: translateX(3px); }
-
+ 
         /* ── MODAL SERVIÇO ── */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(28,28,26,0.75); z-index: 2000; align-items: center; justify-content: center; padding: 2rem; backdrop-filter: blur(4px); }
         .modal-overlay.active { display: flex; }
@@ -154,7 +157,7 @@
         .modal-body ul li { font-size: 0.9rem; line-height: 1.8; color: rgba(28,28,26,0.7); padding-left: 1.4rem; position: relative; }
         .modal-body ul li::before { content: '✦'; position: absolute; left: 0; color: var(--terracotta); font-size: 0.6rem; top: 0.35rem; }
         .modal-cta { margin-top: 2rem; display: flex; gap: 1rem; }
-
+ 
         /* ── CONSULTORES ── */
         .consultores { background: var(--cream); }
         .consultores-header { text-align: center; margin-bottom: 4rem; }
@@ -176,7 +179,7 @@
         .photo-placeholder { width: 100%; height: 420px; background: linear-gradient(160deg, var(--light-sage) 0%, var(--sage) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: 0.8rem; text-align: center; padding: 2rem; gap: 1rem; }
         .photo-placeholder svg { opacity: 0.6; }
         .photo-placeholder p { opacity: 0.75; font-size: 0.75rem; line-height: 1.6; }
-
+ 
         /* ── DEPOIMENTOS ── */
         .depoimentos { background: var(--light-sage); padding: 7rem 4rem; }
         .depoimentos-inner { max-width: 1100px; margin: 0 auto; }
@@ -191,7 +194,7 @@
         .depo-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
         .depo-name { font-size: 0.85rem; font-weight: 500; color: var(--charcoal); }
         .depo-empresa { font-size: 0.7rem; color: var(--sage); text-transform: uppercase; letter-spacing: 0.1em; }
-
+ 
         /* ── CONTATO ── */
         .contato-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
         .contato-left { background: var(--charcoal); padding: 6rem 5rem; display: flex; flex-direction: column; justify-content: space-between; }
@@ -214,14 +217,14 @@
         .form-group select option { background: var(--terracotta); color: white; }
         .form-group textarea { height: 120px; resize: none; }
         .contato-right .section-title { color: white; margin-bottom: 2.5rem; font-size: 2rem; }
-
+ 
         /* ── PARCEIROS ── */
         .parceiros { background: var(--warm-white); padding: 4rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
         .parceiros-label { text-align: center; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(28,28,26,0.4); margin-bottom: 2rem; }
         .parceiros-logos { display: flex; justify-content: center; align-items: center; gap: 4rem; flex-wrap: wrap; }
         .parceiro-logo { font-family: var(--font-display); font-size: 1.1rem; font-weight: 300; color: rgba(28,28,26,0.25); letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; cursor: default; }
         .parceiro-logo:hover { color: var(--terracotta); }
-
+ 
         /* ── FOOTER ── */
         footer { background: var(--deep-brown); padding: 2rem 4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
         .footer-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 300; color: var(--cream); letter-spacing: 0.04em; }
@@ -229,12 +232,12 @@
         .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
         .footer-links a { font-size: 0.72rem; color: rgba(247,243,238,0.5); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.3s; }
         .footer-links a:hover { color: var(--gold); }
-
+ 
         /* ── ANIMATIONS ── */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { opacity: 0; transform: translateY(25px); transition: all 0.7s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
-
+ 
         /* ── RESPONSIVE ── */
         @media (max-width: 1100px) {
             .servicos-grid { grid-template-columns: 1fr 1fr; }
@@ -270,7 +273,7 @@
     </style>
 </head>
 <body>
-
+ 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
     <button class="mobile-close" onclick="closeMobileMenu()">✕</button>
@@ -281,7 +284,7 @@
     <a href="blog.html">Blog</a>
     <a href="#contato" onclick="closeMobileMenu()">Contato</a>
 </div>
-
+ 
 <!-- NAVBAR -->
 <header class="navbar" id="navbar">
     <a href="#" class="logo">LC <span>Gastronômica</span></a>
@@ -308,7 +311,7 @@
         </div>
     </div>
 </header>
-
+ 
 <!-- HERO -->
 <section id="hero" class="hero">
     <div class="hero-left">
@@ -336,7 +339,7 @@
         </div>
     </div>
 </section>
-
+ 
 <!-- PARCEIROS -->
 <div class="parceiros fade-in">
     <p class="parceiros-label">Confiado por marcas renomadas</p>
@@ -348,7 +351,7 @@
         <span class="parceiro-logo">Terra & Fogo</span>
     </div>
 </div>
-
+ 
 <!-- SOBRE -->
 <section id="sobre" class="section sobre">
     <div class="sobre-image-wrap">
@@ -373,7 +376,7 @@
         </div>
     </div>
 </section>
-
+ 
 <!-- SERVIÇOS -->
 <section id="servicos" class="servicos">
     <div class="servicos-header">
@@ -428,7 +431,7 @@
         </div>
     </div>
 </section>
-
+ 
 <!-- MODAIS DE SERVIÇO -->
 <div class="modal-overlay" id="modal-cardapio" onclick="closeModalOutside(event, 'cardapio')">
   <div class="modal-box">
@@ -463,7 +466,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-abertura" onclick="closeModalOutside(event, 'abertura')">
   <div class="modal-box">
     <div class="modal-header">
@@ -495,7 +498,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-gestao" onclick="closeModalOutside(event, 'gestao')">
   <div class="modal-box">
     <div class="modal-header">
@@ -527,7 +530,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-eventos" onclick="closeModalOutside(event, 'eventos')">
   <div class="modal-box">
     <div class="modal-header">
@@ -563,7 +566,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-marketing" onclick="closeModalOutside(event, 'marketing')">
   <div class="modal-box">
     <div class="modal-header">
@@ -595,7 +598,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-treinamento" onclick="closeModalOutside(event, 'treinamento')">
   <div class="modal-box">
     <div class="modal-header">
@@ -630,7 +633,7 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- CONSULTORA -->
 <section id="consultores" class="section consultores">
     <div class="consultores-header fade-in">
@@ -662,7 +665,7 @@
         </div>
     </div>
 </section>
-
+ 
 <!-- DEPOIMENTOS -->
 <section id="depoimentos" class="depoimentos">
     <div class="depoimentos-inner">
@@ -709,7 +712,7 @@
         </div>
     </div>
 </section>
-
+ 
 <!-- CONTATO -->
 <section id="contato">
     <div class="contato-wrapper">
@@ -785,7 +788,7 @@
         </div>
     </div>
 </section>
-
+ 
 <!-- FOOTER -->
 <footer>
     <div class="footer-logo">LC – Consultoria e Crítica Gastronômica</div>
@@ -799,7 +802,7 @@
         <a href="termos.html">Termos de Uso</a>
     </div>
 </footer>
-
+ 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 50); });
